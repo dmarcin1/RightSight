@@ -1,6 +1,6 @@
 //
 //  EditFileTypeSheetView.swift
-//  RClick
+//  RightSight
 //
 //  Created by Claude on 2026/06/28.
 //
@@ -38,7 +38,7 @@ struct EditFileTypeSheetView: View {
     ]
 
     let templatesDir: URL? = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?
-        .appendingPathComponent("RClick/Templates")
+        .appendingPathComponent("RightSight/Templates")
 
     init(file: NewFile, appState: AppState) {
         self.file = file

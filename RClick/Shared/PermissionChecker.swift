@@ -1,6 +1,6 @@
 //
 //  PermissionChecker.swift
-//  RClick
+//  RightSight
 //
 //  辅助功能权限检查模块
 //
@@ -14,7 +14,7 @@ import SwiftUI
 // MARK: - Logger
 
 private let logger = Logger(
-    subsystem: Bundle.main.bundleIdentifier ?? "RClick",
+    subsystem: Bundle.main.bundleIdentifier ?? "RightSight",
     category: "PermissionChecker"
 )
 
@@ -23,12 +23,14 @@ private let logger = Logger(
 /// 提供辅助功能权限的检测
 public class PermissionChecker {
 
+    static let accessibilitySettingsURL = URL(
+        string: "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Privacy_Accessibility"
+    )!
+
     /// 打开辅助功能权限设置
     @MainActor
     public static func openAccessibilitySettings() {
-        if let url = URL(string: "x-apple.systemsettings:com.apple.settings.PrivacySecurity.extension?Privacy_Accessibility") {
-            NSWorkspace.shared.open(url)
-        }
+        NSWorkspace.shared.open(accessibilitySettingsURL)
     }
 
     /// 检查辅助功能权限

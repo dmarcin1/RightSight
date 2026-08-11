@@ -1,6 +1,6 @@
 //
 //  ActionEntity.swift
-//  RClick
+//  RightSight
 //
 //  Created by Claude on 2026/01/16.
 //
@@ -52,6 +52,11 @@ final class ActionEntity {
             ActionEntity(id: "hide", name: "隐藏", icon: "eye.slash", isEnabled: false, sortOrder: 2),
             ActionEntity(id: "unhide", name: "显示", icon: "eye", isEnabled: false, sortOrder: 3),
             ActionEntity(id: "airdrop", name: "AirDrop", icon: "paperplane", isEnabled: false, sortOrder: 4),
+            ActionEntity(id: "convert-images", name: "Convert Images", icon: "photo.badge.arrow.down", isEnabled: true, sortOrder: 5),
+            ActionEntity(id: "cut-files", name: "Cut Files", icon: "scissors", isEnabled: true, sortOrder: 6),
+            ActionEntity(id: "paste-files", name: "Paste", icon: "doc.on.clipboard", isEnabled: true, sortOrder: 7),
+            ActionEntity(id: "copy-to", name: "Copy To…", icon: "doc.on.doc", isEnabled: true, sortOrder: 8),
+            ActionEntity(id: "move-to", name: "Move To…", icon: "folder", isEnabled: true, sortOrder: 9),
         ]
     }
 }

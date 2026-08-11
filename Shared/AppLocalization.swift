@@ -1,6 +1,6 @@
 //
 //  AppLocalization.swift
-//  RClick
+//  RightSight
 //
 //  Created by Codex on 2026/7/3.
 //

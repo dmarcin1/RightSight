@@ -13,7 +13,7 @@ import AppKit
 // MARK: - Logger
 
 private let logger = Logger(
-    subsystem: "RClick.FinderSyncExt",
+    subsystem: "RightSight.FinderSyncExt",
     category: "FinderSyncExt"
 )
 
@@ -155,20 +155,20 @@ class FinderSyncExt: FIFinderSync, @unchecked Sendable {
     }
 
     override func requestBadgeIdentifier(for url: URL) {
-        // 不设置任何徽章标识，避免 Finder 在项目上叠加 RClick 图标。
+        // 不设置任何徽章标识，避免 Finder 在项目上叠加 RightSight 图标。
         // 非空徽章 ID 会使 Finder 在文件/磁盘图标上显示扩展的图标叠加层，
-        // 这会导致移动磁盘和光盘等外部卷的图标被 RClick 图标覆盖。
+        // 这会导致移动磁盘和光盘等外部卷的图标被 RightSight 图标覆盖。
         FIFinderSyncController.default().setBadgeIdentifier("", for: url)
     }
 
     // MARK: - Menu and toolbar item support
 
     override var toolbarItemName: String {
-        return "RClick"
+        return "RightSight"
     }
 
     override var toolbarItemToolTip: String {
-        return "RClick: Click for menu options"
+        return "RightSight: Click for menu options"
     }
 
     override var toolbarItemImage: NSImage {
@@ -244,12 +244,12 @@ class FinderSyncExt: FIFinderSync, @unchecked Sendable {
         }()
         logger.info("构建菜单，触发方式: \(menuKindLabel)")
 
-        let menu = NSMenu(title: "RClick")
+        let menu = NSMenu(title: "RightSight")
 
         // 如果缓存为空，触发请求并返回加载中的菜单
         guard let config = cachedMenuConfig else {
             requestMenuConfig()
-            menu.addItem(withTitle: AppLocalization.localized("RClick (loading...)"), action: nil, keyEquivalent: "")
+            menu.addItem(withTitle: AppLocalization.localized("RightSight (loading...)"), action: nil, keyEquivalent: "")
             return menu
         }
 

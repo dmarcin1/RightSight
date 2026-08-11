@@ -1,6 +1,6 @@
 //
 //  SettingsView.swift
-//  RClick
+//  RightSight
 //
 //  Created by 李旭 on 2024/4/4.
 //
@@ -60,7 +60,7 @@ struct SettingsView: View {
                 }
                 HStack {
                     Spacer()
-                    Text("RClick").font(.title)
+                    Text("RightSight").font(.title)
                     Text("\(self.getAppVersion())")
                     Spacer()
                 }

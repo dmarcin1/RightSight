@@ -77,48 +77,48 @@
         }
       }
     },
-    "3. Click \"+\" -> open \"Applications\" -> select \"RClick\"": {
+    "3. Click \"+\" -> open \"Applications\" -> select \"RightSight\"": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "3. Click \"+\" -> open \"Applications\" -> select \"RClick\""
+            "value": "3. Click \"+\" -> open \"Applications\" -> select \"RightSight\""
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "3. 「+」を押して「アプリケーション」から「RClick」を選択します"
+            "value": "3. 「+」を押して「アプリケーション」から「RightSight」を選択します"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "3. 点击“+”并前往“应用程序”，选择“RClick”"
+            "value": "3. 点击“+”并前往“应用程序”，选择“RightSight”"
           }
         }
       }
     },
-    "4. Make sure the switch next to RClick is turned on": {
+    "4. Make sure the switch next to RightSight is turned on": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "4. Make sure the switch next to RClick is turned on"
+            "value": "4. Make sure the switch next to RightSight is turned on"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "4. RClick の横にあるスイッチがオンになっていることを確認します"
+            "value": "4. RightSight の横にあるスイッチがオンになっていることを確認します"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "4. 确保 RClick 旁边的开关已打开"
+            "value": "4. 确保 RightSight 旁边的开关已打开"
           }
         }
       }
@@ -445,25 +445,25 @@
         }
       }
     },
-    "Authorize folders to let RClick create, delete, and manage files in them.": {
+    "Authorize folders to let RightSight create, delete, and manage files in them.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Authorize folders to let RClick create, delete, and manage files in them."
+            "value": "Authorize folders to let RightSight create, delete, and manage files in them."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "フォルダを認証して、RClick がファイルの作成、削除、管理を行えるようにします。"
+            "value": "フォルダを認証して、RightSight がファイルの作成、削除、管理を行えるようにします。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "授权文件夹，让 RClick 可以在其中创建、删除和管理文件。"
+            "value": "授权文件夹，让 RightSight 可以在其中创建、删除和管理文件。"
           }
         }
       }
@@ -629,25 +629,25 @@
         }
       }
     },
-    "Choose a folder for RClick to access.": {
+    "Choose a folder for RightSight to access.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Choose a folder for RClick to access."
+            "value": "Choose a folder for RightSight to access."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick がアクセスできるフォルダを選択してください。"
+            "value": "RightSight がアクセスできるフォルダを選択してください。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "选择 RClick 可以访问的文件夹。"
+            "value": "选择 RightSight 可以访问的文件夹。"
           }
         }
       }
@@ -1181,48 +1181,48 @@
         }
       }
     },
-    "Enable RClick": {
+    "Enable RightSight": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Enable RClick"
+            "value": "Enable RightSight"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick を有効にする"
+            "value": "RightSight を有効にする"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "启用 RClick"
+            "value": "启用 RightSight"
           }
         }
       }
     },
-    "Enable RClick in File Provider to show its actions in Finder context menus": {
+    "Enable RightSight in File Provider to show its actions in Finder context menus": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Enable RClick in File Provider to show its actions in Finder context menus"
+            "value": "Enable RightSight in File Provider to show its actions in Finder context menus"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ファイルプロバイダで RClick を有効にすると Finder の右クリックメニューに表示されます"
+            "value": "ファイルプロバイダで RightSight を有効にすると Finder の右クリックメニューに表示されます"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "在文件提供程序中启用 RClick 以在 Finder 右键菜单中显示功能"
+            "value": "在文件提供程序中启用 RightSight 以在 Finder 右键菜单中显示功能"
           }
         }
       }
@@ -1457,25 +1457,25 @@
         }
       }
     },
-    "File Provider: Select \"RClick\" in the list to enable the Finder context menu": {
+    "File Provider: Select \"RightSight\" in the list to enable the Finder context menu": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "File Provider: Select \"RClick\" in the list to enable the Finder context menu"
+            "value": "File Provider: Select \"RightSight\" in the list to enable the Finder context menu"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ファイルプロバイダ一覧で「RClick」を選択すると Finder の右クリックメニューを有効にできます"
+            "value": "ファイルプロバイダ一覧で「RightSight」を選択すると Finder の右クリックメニューを有効にできます"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "文件提供程序：在列表中选择“RClick”以启用 Finder 右键菜单"
+            "value": "文件提供程序：在列表中选择“RightSight”以启用 Finder 右键菜单"
           }
         }
       }
@@ -1687,7 +1687,7 @@
         }
       }
     },
-    "github.com/wflixu/RClick": {},
+    "github.com/wflixu/RightSight": {},
     "Grant Access": {
       "extractionState": "manual",
       "localizations": {
@@ -1734,25 +1734,25 @@
         }
       }
     },
-    "Grant RClick access to this folder to perform file operations.": {
+    "Grant RightSight access to this folder to perform file operations.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Grant RClick access to this folder to perform file operations."
+            "value": "Grant RightSight access to this folder to perform file operations."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ファイル操作を実行するために、RClick にこのフォルダへのアクセスを許可してください。"
+            "value": "ファイル操作を実行するために、RightSight にこのフォルダへのアクセスを許可してください。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "授权 RClick 访问此文件夹以执行文件操作。"
+            "value": "授权 RightSight 访问此文件夹以执行文件操作。"
           }
         }
       }
@@ -2429,150 +2429,150 @@
         }
       }
     },
-    "RClick": {
+    "RightSight": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick"
+            "value": "RightSight"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick"
+            "value": "RightSight"
           }
         }
       }
     },
-    "RClick (loading...)": {
+    "RightSight (loading...)": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick (loading...)"
+            "value": "RightSight (loading...)"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick（読み込み中...）"
+            "value": "RightSight（読み込み中...）"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick（加载中...）"
+            "value": "RightSight（加载中...）"
           }
         }
       }
     },
-    "RClick is a right-click menu extension that allows you to add applications for opening folders and includes some common actions!": {
+    "RightSight is a right-click menu extension that allows you to add applications for opening folders and includes some common actions!": {
       "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick is a right-click menu extension that allows you to add applications for opening folders and includes some common actions!"
+            "value": "RightSight is a right-click menu extension that allows you to add applications for opening folders and includes some common actions!"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick 是一个右键菜单扩展，可以添加打开文件夹的应用，可以添加一些常用的操作！"
+            "value": "RightSight 是一个右键菜单扩展，可以添加打开文件夹的应用，可以添加一些常用的操作！"
           }
         }
       }
     },
-    "RClick is a right-click menu extension that allows you to add applications for opening folders and includes some common actions.": {
+    "RightSight is a right-click menu extension that allows you to add applications for opening folders and includes some common actions.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick is a right-click menu extension that allows you to add applications for opening folders and includes some common actions."
+            "value": "RightSight is a right-click menu extension that allows you to add applications for opening folders and includes some common actions."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick はフォルダを開くアプリを追加できる右クリックメニュー拡張で、いくつかの便利な操作も含まれています。"
+            "value": "RightSight はフォルダを開くアプリを追加できる右クリックメニュー拡張で、いくつかの便利な操作も含まれています。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick 是一个右键菜单扩展，可以添加打开文件夹的应用，并提供一些常用操作。"
+            "value": "RightSight 是一个右键菜单扩展，可以添加打开文件夹的应用，并提供一些常用操作。"
           }
         }
       }
     },
-    "RClick needs Full Disk Access to create files, delete files, and manage hidden files in protected folders (like Desktop, Documents, and Downloads).\n\nWithout this permission, some operations may fail on protected directories.\n\nTo enable:\n1. Click \"Open Settings\" below\n2. Click the lock icon and authenticate\n3. Click \"+\" and add RClick from your Applications folder\n4. Toggle the switch next to RClick to ON": {
+    "RightSight needs Full Disk Access to create files, delete files, and manage hidden files in protected folders (like Desktop, Documents, and Downloads).\n\nWithout this permission, some operations may fail on protected directories.\n\nTo enable:\n1. Click \"Open Settings\" below\n2. Click the lock icon and authenticate\n3. Click \"+\" and add RightSight from your Applications folder\n4. Toggle the switch next to RightSight to ON": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick needs Full Disk Access to create files, delete files, and manage hidden files in protected folders (like Desktop, Documents, and Downloads).\n\nWithout this permission, some operations may fail on protected directories.\n\nTo enable:\n1. Click \"Open Settings\" below\n2. Click the lock icon and authenticate\n3. Click \"+\" and add RClick from your Applications folder\n4. Toggle the switch next to RClick to ON"
+            "value": "RightSight needs Full Disk Access to create files, delete files, and manage hidden files in protected folders (like Desktop, Documents, and Downloads).\n\nWithout this permission, some operations may fail on protected directories.\n\nTo enable:\n1. Click \"Open Settings\" below\n2. Click the lock icon and authenticate\n3. Click \"+\" and add RightSight from your Applications folder\n4. Toggle the switch next to RightSight to ON"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick がデスクトップ、書類、ダウンロードなどの保護されたフォルダでファイルの作成、削除、隠しファイルの管理を行うには、フルディスクアクセスが必要です。\n\nこの権限がない場合、保護されたディレクトリで一部の操作が失敗することがあります。\n\n有効にするには:\n1. 下の「設定を開く」をクリックします\n2. 鍵アイコンをクリックして認証します\n3. 「+」をクリックし、アプリケーションフォルダから RClick を追加します\n4. RClick の横にあるスイッチをオンにします"
+            "value": "RightSight がデスクトップ、書類、ダウンロードなどの保護されたフォルダでファイルの作成、削除、隠しファイルの管理を行うには、フルディスクアクセスが必要です。\n\nこの権限がない場合、保護されたディレクトリで一部の操作が失敗することがあります。\n\n有効にするには:\n1. 下の「設定を開く」をクリックします\n2. 鍵アイコンをクリックして認証します\n3. 「+」をクリックし、アプリケーションフォルダから RightSight を追加します\n4. RightSight の横にあるスイッチをオンにします"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick 需要完全磁盘访问权限，才能在受保护文件夹中创建文件、删除文件和管理隐藏文件，例如桌面、文稿和下载。\n\n没有此权限时，某些操作可能会在受保护目录中失败。\n\n启用方法：\n1. 点击下方“打开设置”\n2. 点击锁图标并认证\n3. 点击“+”，从“应用程序”文件夹添加 RClick\n4. 打开 RClick 旁边的开关"
+            "value": "RightSight 需要完全磁盘访问权限，才能在受保护文件夹中创建文件、删除文件和管理隐藏文件，例如桌面、文稿和下载。\n\n没有此权限时，某些操作可能会在受保护目录中失败。\n\n启用方法：\n1. 点击下方“打开设置”\n2. 点击锁图标并认证\n3. 点击“+”，从“应用程序”文件夹添加 RightSight\n4. 打开 RightSight 旁边的开关"
           }
         }
       }
     },
-    "RClick needs Full Disk Access to work with files in protected directories": {
+    "RightSight needs Full Disk Access to work with files in protected directories": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick needs Full Disk Access to work with files in protected directories"
+            "value": "RightSight needs Full Disk Access to work with files in protected directories"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick が保護されたディレクトリ内のファイルを操作するにはフルディスクアクセスが必要です"
+            "value": "RightSight が保護されたディレクトリ内のファイルを操作するにはフルディスクアクセスが必要です"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick 需要完全磁盘访问权限才能正常操作受保护目录中的文件"
+            "value": "RightSight 需要完全磁盘访问权限才能正常操作受保护目录中的文件"
           }
         }
       }
     },
-    "RClick needs permission to install the update into your Applications folder.": {
+    "RightSight needs permission to install the update into your Applications folder.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick needs permission to install the update into your Applications folder."
+            "value": "RightSight needs permission to install the update into your Applications folder."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick がアップデートをアプリケーションフォルダにインストールするには権限が必要です。"
+            "value": "RightSight がアップデートをアプリケーションフォルダにインストールするには権限が必要です。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "RClick 需要权限以将更新安装到您的“应用程序”文件夹中。"
+            "value": "RightSight 需要权限以将更新安装到您的“应用程序”文件夹中。"
           }
         }
       }
@@ -3351,6 +3351,216 @@
             "value": "需要添加新功能，在这里反馈"
           }
         }
+      }
+    },
+    "Choose an output format for %d image(s). Original files will be kept.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "为 %d 张图片选择输出格式。原文件会保留。" } }
+      }
+    },
+    "Conversion complete": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "转换完成" } }
+      }
+    },
+    "Conversion finished with errors": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "转换完成，但有部分失败" } }
+      }
+    },
+    "Convert": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "转换" } }
+      }
+    },
+    "Convert Images": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "转换图片" } }
+      }
+    },
+    "Created %d image(s).": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "已生成 %d 张图片。" } }
+      }
+    },
+    "No readable images": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "没有可读取的图片" } }
+      }
+    },
+    "Select images first": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "请先选择图片" } }
+      }
+    },
+    "Select one or more image files in Finder, then choose Convert Images.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "请在 Finder 中选择一张或多张图片，然后点击“转换图片”。" } }
+      }
+    },
+    "Skipped %d item(s).": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "已跳过 %d 个项目。" } }
+      }
+    },
+    "The selected items do not contain images that RightSight can convert.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "所选项目中没有右见可以转换的图片。" } }
+      }
+    },
+    "%@ complete": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "%@完成" } }
+      }
+    },
+    "%@ finished with errors": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "%@完成，但有部分失败" } }
+      }
+    },
+    "%d item(s) are ready to move. Right-click the destination folder and choose Paste.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "已剪切 %d 个项目。请右键目标文件夹并选择“粘贴”。" } }
+      }
+    },
+    "Choose a destination folder": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "请选择目标文件夹" } }
+      }
+    },
+    "Choose Cut Files on one or more items first.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "请先对一个或多个项目执行“剪切文件”。" } }
+      }
+    },
+    "Choose where to copy the selected items.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "选择要将所选项目复制到的文件夹。" } }
+      }
+    },
+    "Choose where to move the selected items.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "选择要将所选项目移动到的文件夹。" } }
+      }
+    },
+    "Completed %d item(s).": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "已完成 %d 个项目。" } }
+      }
+    },
+    "Copy": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "复制" } }
+      }
+    },
+    "Copy Here": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "复制到这里" } }
+      }
+    },
+    "Copy To…": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "复制到…" } }
+      }
+    },
+    "Cut Files": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "剪切文件" } }
+      }
+    },
+    "Files cut": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "文件已剪切" } }
+      }
+    },
+    "Move": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "移动" } }
+      }
+    },
+    "Move Here": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "移动到这里" } }
+      }
+    },
+    "Move To…": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "移动到…" } }
+      }
+    },
+    "No files available": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "没有可操作的文件" } }
+      }
+    },
+    "Nothing to paste": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "没有可粘贴的项目" } }
+      }
+    },
+    "Paste": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "粘贴" } }
+      }
+    },
+    "Right-click a folder or an empty area inside a folder, then choose Paste.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "请右键文件夹或文件夹内的空白处，然后选择“粘贴”。" } }
+      }
+    },
+    "Select one or more files or folders in Finder first.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "请先在 Finder 中选择一个或多个文件或文件夹。" } }
+      }
+    },
+    "Select one or more files or folders in Finder, then choose Cut Files.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "请在 Finder 中选择一个或多个文件或文件夹，然后点击“剪切文件”。" } }
+      }
+    },
+    "The selected items cannot be cut or access was not granted.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "所选项目无法剪切，或尚未授予访问权限。" } }
+      }
+    },
+    "The selected items cannot be used or access was not granted.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "所选项目无法操作，或尚未授予访问权限。" } }
       }
     },
     "Warning": {

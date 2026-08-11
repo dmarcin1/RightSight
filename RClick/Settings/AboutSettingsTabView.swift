@@ -1,6 +1,6 @@
 //
 //  AdvancedSettingsView.swift
-//  RClick
+//  RightSight
 //
 //  Created by 李旭 on 2024/4/4.
 //
@@ -13,7 +13,6 @@ import SwiftUI
 
 struct AboutSettingsTabView: View {
     let messager = Messager.shared
-    @EnvironmentObject var updateManager: UpdateManager
 
     var body: some View {
         Form {
@@ -24,7 +23,7 @@ struct AboutSettingsTabView: View {
                         .frame(width: 96, height: 96)
 
                     VStack(spacing: 4) {
-                        Text("RClick").font(.title)
+                        Text("RightSight").font(.title)
                         Text(String(format: AppLocalization.localized("Version %@ (%@)"), getAppVersion(), getBuildVersion()))
                             .foregroundColor(.secondary)
                     }
@@ -34,29 +33,10 @@ struct AboutSettingsTabView: View {
             }
 
             Section {
-                Text(appLocalized: "RClick is a right-click menu extension that allows you to add applications for opening folders and includes some common actions.")
+                Text(appLocalized: "RightSight is a right-click menu extension that allows you to add applications for opening folders and includes some common actions.")
                     .font(.body)
             }
 
-            Section {
-                HStack {
-                    Button(AppLocalization.localized("Check for Updates")) {
-                        Task {
-                            await updateManager.checkForUpdates(force: true)
-                        }
-                    }
-                    if updateManager.isChecking {
-                        ProgressView()
-                            .scaleEffect(0.8)
-                    }
-                }
-            }
-
-            Section {
-                Link(destination: URL(string: "https://github.com/wflixu/RClick")!) {
-                    Label("github.com/wflixu/RClick", image: "github")
-                }
-            }
         }
         .formStyle(.grouped)
     }

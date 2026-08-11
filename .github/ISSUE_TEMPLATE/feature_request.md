@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest a new feature or enhancement for RClick
+about: Suggest a new feature or enhancement for RightSight
 title: '[FEATURE] '
 labels: enhancement
 assignees: ''

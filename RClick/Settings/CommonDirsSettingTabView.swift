@@ -1,6 +1,6 @@
 //
 //  CommonDirsSettingTabView.swift
-//  RClick
+//  RightSight
 //
 //  Created by 李旭 on 2024/4/10.
 //

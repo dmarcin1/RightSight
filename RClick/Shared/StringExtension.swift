@@ -1,6 +1,6 @@
 //
 //  StringExtension.swift
-//  RClick
+//  RightSight
 //
 //  Created by 李旭 on 2024/4/5.
 //
@@ -96,7 +96,7 @@ extension String {
 
 extension UserDefaults {
     static let group: UserDefaults = {
-        if let suite = UserDefaults(suiteName: "group.cn.wflixu.RClick") {
+        if let suite = UserDefaults(suiteName: "group.com.rightsight.app") {
             return suite
         }
         return .standard

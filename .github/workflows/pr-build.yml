@@ -25,7 +25,7 @@ jobs:
           xcodebuild -version
           swift --version
 
-      - name: Build RClick
+      - name: Build RightSight
         run: |
           set -euo pipefail
           xcodebuild build \

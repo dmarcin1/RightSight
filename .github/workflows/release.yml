@@ -17,8 +17,10 @@ jobs:
     name: Build, Sign, Notarize & Release
     runs-on: macos-latest
     env:
-      APP_NAME: RClick
-      EXTENSION_NAME: FinderSyncExt
+      APP_NAME: RightSight
+      EXTENSION_NAME: RightSightFinderSync
+      APP_ENTITLEMENTS: RClick/RClick.entitlements
+      EXTENSION_ENTITLEMENTS: FinderSyncExt/FinderSyncExt.entitlements
       SCHEME: RClick
       PROJECT: RClick.xcodeproj
     steps:
@@ -122,7 +124,7 @@ jobs:
           if [ -d "$EXT_PATH" ]; then
             codesign --force --options runtime \
               --timestamp \
-              --entitlements "${EXTENSION_NAME}/${EXTENSION_NAME}.entitlements" \
+              --entitlements "$EXTENSION_ENTITLEMENTS" \
               --sign "$CERT_NAME" \
               "$EXT_PATH"
           fi
@@ -131,7 +133,7 @@ jobs:
           echo "Signing main app..."
           codesign --force --options runtime \
             --timestamp \
-            --entitlements "${APP_NAME}/${APP_NAME}.entitlements" \
+            --entitlements "$APP_ENTITLEMENTS" \
             --sign "$CERT_NAME" \
             "$APP_PATH"
 

@@ -1,6 +1,6 @@
 //
 //  BookmarkManager.swift
-//  RClick
+//  RightSight
 //
 //  Created by Claude on 2026/07/12.
 //
@@ -26,7 +26,7 @@ final class BookmarkManager: ObservableObject {
     private var isPrompting = false
 
     private let logger = Logger(
-        subsystem: Bundle.main.bundleIdentifier ?? "RClick",
+        subsystem: Bundle.main.bundleIdentifier ?? "RightSight",
         category: "BookmarkManager"
     )
 
@@ -105,7 +105,7 @@ final class BookmarkManager: ObservableObject {
         defer { isPrompting = false }
 
         let panel = NSOpenPanel()
-        panel.message = AppLocalization.localized("Grant RClick access to this folder to perform file operations.")
+        panel.message = AppLocalization.localized("Grant RightSight access to this folder to perform file operations.")
         panel.prompt = AppLocalization.localized("Grant Access")
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
@@ -190,7 +190,7 @@ final class BookmarkManager: ObservableObject {
         defer { isPrompting = false }
 
         let panel = NSOpenPanel()
-        panel.message = AppLocalization.localized("Choose a folder for RClick to access.")
+        panel.message = AppLocalization.localized("Choose a folder for RightSight to access.")
         panel.prompt = AppLocalization.localized("Grant Access")
         panel.canChooseFiles = false
         panel.canChooseDirectories = true

@@ -1,6 +1,6 @@
 //
 //  DataMigrationManager.swift
-//  RClick
+//  RightSight
 //
 //  Created by Claude on 2026/01/16.
 //
@@ -15,7 +15,7 @@ class DataMigrationManager {
     static let shared = DataMigrationManager()
 
     private let logger = Logger(
-        subsystem: Bundle.main.bundleIdentifier ?? "RClick",
+        subsystem: Bundle.main.bundleIdentifier ?? "RightSight",
         category: "DataMigration"
     )
 
@@ -177,7 +177,7 @@ class DataMigrationManager {
         }
 
         let backupURL = documentsURL
-            .appendingPathComponent("RClick_UserDefaults_Backup_\(timestamp).json")
+            .appendingPathComponent("RightSight_UserDefaults_Backup_\(timestamp).json")
 
         do {
             let data = try JSONSerialization.data(

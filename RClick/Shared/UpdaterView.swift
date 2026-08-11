@@ -1,6 +1,6 @@
 //
 //  Up.swift
-//  RClick
+//  RightSight
 //
 //  Created by 李旭 on 2025/9/21.
 //

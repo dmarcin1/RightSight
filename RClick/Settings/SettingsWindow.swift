@@ -1,6 +1,6 @@
 //
 //  SettingsWindow.swift
-//  RClick
+//  RightSight
 //
 //  Created by 李旭 on 2024/9/25.
 //

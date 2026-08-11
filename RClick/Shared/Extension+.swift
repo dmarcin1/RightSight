@@ -1,6 +1,6 @@
 //
 //  Extension+.swift
-//  RClick
+//  RightSight
 //
 //  Created by 李旭 on 2024/8/9.
 //

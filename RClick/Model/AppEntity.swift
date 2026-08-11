@@ -1,6 +1,6 @@
 //
 //  AppEntity.swift
-//  RClick
+//  RightSight
 //
 //  Created by Claude on 2026/01/16.
 //

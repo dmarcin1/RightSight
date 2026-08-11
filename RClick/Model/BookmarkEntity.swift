@@ -1,6 +1,6 @@
 //
 //  BookmarkEntity.swift
-//  RClick
+//  RightSight
 //
 //  Created by Claude on 2026/07/12.
 //

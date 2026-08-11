@@ -1,6 +1,6 @@
 //
 //  LaunchAtLogin.swift
-//  RClick
+//  RightSight
 //  from https://github.com/sindresorhus/LaunchAtLogin-Modern
 //  Created by 李旭 on 2024/12/19.
 //

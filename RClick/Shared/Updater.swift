@@ -1,6 +1,6 @@
 //
 //  Updater.swift
-//  RClick
+//  RightSight
 //
 //  Created by 李旭 on 2025/9/21.
 //
@@ -356,7 +356,7 @@ class UpdateManager: ObservableObject {
     @MainActor
     private func requestApplicationsFolderAccess() async throws {
         let openPanel = NSOpenPanel()
-        openPanel.message = AppLocalization.localized("RClick needs permission to install the update into your Applications folder.")
+        openPanel.message = AppLocalization.localized("RightSight needs permission to install the update into your Applications folder.")
         openPanel.prompt = AppLocalization.localized("Grant Permission")
         openPanel.canChooseFiles = false
         openPanel.canChooseDirectories = true
@@ -429,7 +429,7 @@ class UpdateManager: ObservableObject {
     private func launchNewApplicationAndExit() {
         let fileManager = FileManager.default
         let applicationsURL = fileManager.urls(for: .applicationDirectory, in: .localDomainMask).first!
-        let currentAppName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "RClick"
+        let currentAppName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "RightSight"
         let newAppURL = applicationsURL.appendingPathComponent("\(currentAppName).app")
         
         let configuration = NSWorkspace.OpenConfiguration()
@@ -454,7 +454,7 @@ class UpdateManager: ObservableObject {
     
     // 打开GitHub发布页面
     func openReleasesPage() {
-        if let url = URL(string: "https://github.com/wflixu/RClick/releases") {
+        if let url = URL(string: "https://github.com/dmarcin1/RightSight/releases") {
             NSWorkspace.shared.open(url)
         }
     }

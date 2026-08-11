@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5C8A28D92F83D65900FE687C"
-               BuildableName = "RClick.app"
+               BuildableName = "RightSight.app"
                BlueprintName = "RClick"
                ReferencedContainer = "container:RClick.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5C8A28E82F83D65B00FE687C"
-               BuildableName = "RClickTests.xctest"
+               BuildableName = "RightSightTests.xctest"
                BlueprintName = "RClickTests"
                ReferencedContainer = "container:RClick.xcodeproj">
             </BuildableReference>
@@ -68,7 +68,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5C8A28D92F83D65900FE687C"
-            BuildableName = "RClick.app"
+            BuildableName = "RightSight.app"
             BlueprintName = "RClick"
             ReferencedContainer = "container:RClick.xcodeproj">
          </BuildableReference>
@@ -85,7 +85,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5C8A28D92F83D65900FE687C"
-            BuildableName = "RClick.app"
+            BuildableName = "RightSight.app"
             BlueprintName = "RClick"
             ReferencedContainer = "container:RClick.xcodeproj">
          </BuildableReference>

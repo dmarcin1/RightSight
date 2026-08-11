@@ -1,6 +1,6 @@
 //
 //  RCBase.swift
-//  RClick
+//  RightSight
 //
 //  Created by 李旭 on 2024/9/26.
 //
@@ -206,8 +206,24 @@ extension RCAction {
     static let hideFileDir = RCAction(id: "hide", name: "Hide", enabled: false, idx: 2, icon: "eye.slash")
     static let unhideFileDir = RCAction(id: "unhide", name: "Unhide", enabled: false, idx: 3, icon: "eye")
     static let airdrop = RCAction(id: "airdrop", name: "AirDrop", enabled: false, idx: 4, icon: "paperplane")
+    static let convertImages = RCAction(id: "convert-images", name: "Convert Images", enabled: true, idx: 5, icon: "photo.badge.arrow.down")
+    static let cutFiles = RCAction(id: "cut-files", name: "Cut Files", enabled: true, idx: 6, icon: "scissors")
+    static let pasteFiles = RCAction(id: "paste-files", name: "Paste", enabled: true, idx: 7, icon: "doc.on.clipboard")
+    static let copyTo = RCAction(id: "copy-to", name: "Copy To…", enabled: true, idx: 8, icon: "doc.on.doc")
+    static let moveTo = RCAction(id: "move-to", name: "Move To…", enabled: true, idx: 9, icon: "folder")
 
-    static let all: [RCAction] = [.copyPath, .deleteDirect, .airdrop, .hideFileDir, .unhideFileDir]
+    static let all: [RCAction] = [
+        .copyPath,
+        .deleteDirect,
+        .airdrop,
+        .hideFileDir,
+        .unhideFileDir,
+        .convertImages,
+        .cutFiles,
+        .pasteFiles,
+        .copyTo,
+        .moveTo,
+    ]
 }
 
 // New File Type
@@ -328,6 +344,11 @@ extension RCAction {
         case "hide": return AppLocalization.localized("Hide")
         case "unhide": return AppLocalization.localized("Unhide")
         case "airdrop": return AppLocalization.localized("AirDrop")
+        case "convert-images": return AppLocalization.localized("Convert Images")
+        case "cut-files": return AppLocalization.localized("Cut Files")
+        case "paste-files": return AppLocalization.localized("Paste")
+        case "copy-to": return AppLocalization.localized("Copy To…")
+        case "move-to": return AppLocalization.localized("Move To…")
         default: return name
         }
     }

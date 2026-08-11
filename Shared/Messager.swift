@@ -1,6 +1,6 @@
 //
 //  Messager.swift
-//  RClick
+//  RightSight
 //
 //  进程间通信（IPC）管理器
 //  基于：DistributedNotificationCenter + Codable 协议
@@ -212,7 +212,7 @@ struct ExtensionToMainMessage: Codable {
 
 /// Logger for Messager operations
 private let logger = Logger(
-    subsystem: Bundle.main.bundleIdentifier ?? "RClick",
+    subsystem: Bundle.main.bundleIdentifier ?? "RightSight",
     category: "Messager"
 )
 
@@ -229,8 +229,8 @@ class Messager: @unchecked Sendable {
     nonisolated(unsafe) private var extensionToMainHandlers: [ExtensionToMainAction: (Data?) -> Void] = [:]
 
     // 通知名称
-    static let mainToExtensionNotification = "RClick.MainToExtension"
-    static let extensionToMainNotification = "RClick.ExtensionToMain"
+    static let mainToExtensionNotification = "RightSight.MainToExtension"
+    static let extensionToMainNotification = "RightSight.ExtensionToMain"
 
     private let isExtension: Bool
 

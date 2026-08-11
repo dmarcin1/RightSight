@@ -1,6 +1,6 @@
 //
 //  FolderPermissionsSheetView.swift
-//  RClick
+//  RightSight
 //
 //  Created by Claude on 2026/07/12.
 //
@@ -25,7 +25,7 @@ struct FolderPermissionsSheetView: View {
                         .foregroundColor(.secondary)
                     Text(AppLocalization.localized("No folders authorized"))
                         .foregroundColor(.secondary)
-                    Text(AppLocalization.localized("Authorize folders to let RClick create, delete, and manage files in them."))
+                    Text(AppLocalization.localized("Authorize folders to let RightSight create, delete, and manage files in them."))
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)

@@ -17,7 +17,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5C8A29172F83D74A00FE687C"
-               BuildableName = "FinderSyncExt.appex"
+               BuildableName = "RightSightFinderSync.appex"
                BlueprintName = "FinderSyncExt"
                ReferencedContainer = "container:RClick.xcodeproj">
             </BuildableReference>
@@ -31,7 +31,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5C8A28D92F83D65900FE687C"
-               BuildableName = "RClick.app"
+               BuildableName = "RightSight.app"
                BlueprintName = "RClick"
                ReferencedContainer = "container:RClick.xcodeproj">
             </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5C8A28D92F83D65900FE687C"
-            BuildableName = "RClick.app"
+            BuildableName = "RightSight.app"
             BlueprintName = "RClick"
             ReferencedContainer = "container:RClick.xcodeproj">
          </BuildableReference>
@@ -88,7 +88,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5C8A28D92F83D65900FE687C"
-            BuildableName = "RClick.app"
+            BuildableName = "RightSight.app"
             BlueprintName = "RClick"
             ReferencedContainer = "container:RClick.xcodeproj">
          </BuildableReference>

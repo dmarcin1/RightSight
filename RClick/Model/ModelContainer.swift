@@ -1,6 +1,6 @@
 //
 //  ModelContainer.swift
-//  RClick
+//  RightSight
 //
 //  Created by 李旭 on 2025/10/3.
 //
@@ -15,7 +15,7 @@ class SharedDataManager {
     static let appGroupIdentifier = Constants.suitName
 
     private static let logger = Logger(
-        subsystem: Bundle.main.bundleIdentifier ?? "RClick",
+        subsystem: Bundle.main.bundleIdentifier ?? "RightSight",
         category: "ModelContainer"
     )
 
@@ -27,7 +27,7 @@ class SharedDataManager {
             guard let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier) else {
                 fatalError("无法获取 App Group 共享目录。请检查 App Group 配置: \(appGroupIdentifier)")
             }
-            storeURL = containerURL.appendingPathComponent("RClickDatabase.sqlite")
+            storeURL = containerURL.appendingPathComponent("RightSightDatabase.sqlite")
 
             // 创建 ModelConfiguration 使用共享路径
             let configuration = ModelConfiguration(
@@ -60,7 +60,6 @@ class SharedDataManager {
         let actionCount = try? context.fetchCount(actionDescriptor)
 
         if actionCount == 0 {
-            // 插入默认动作
             for action in ActionEntity.createDefaultActions() {
                 context.insert(action)
             }

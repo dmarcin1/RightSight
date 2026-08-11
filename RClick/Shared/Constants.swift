@@ -1,6 +1,6 @@
 //
 //  Constants.swift
-//  RClick
+//  RightSight
 //
 //  Created by 李旭 on 2024/9/25.
 //
@@ -25,6 +25,6 @@ public enum Constants {
         "/sbin/",
         "/var/"
     ]
-    static let suitName = "group.cn.wflixu.RClick"
+    static let suitName = "group.com.rightsight.app"
 
 }

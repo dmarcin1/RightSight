@@ -1,6 +1,6 @@
 //
 //  GeneralSettingsTabView.swift
-//  RClick
+//  RightSight
 //
 //  Created by 李旭 on 2024/4/10.
 //
@@ -50,7 +50,7 @@ struct GeneralSettingsTabView: View {
                         }
                     }
                 )) {
-                    Text(appLocalized: "Enable RClick")
+                    Text(appLocalized: "Enable RightSight")
                 }
 
                 Toggle(isOn: $showMenuBarExtra) {
@@ -63,7 +63,7 @@ struct GeneralSettingsTabView: View {
             } header: {
                 Text(appLocalized: "Main Controls")
             } footer: {
-                Text(appLocalized: "Enable RClick in File Provider to show its actions in Finder context menus")
+                Text(appLocalized: "Enable RightSight in File Provider to show its actions in Finder context menus")
                     .fixedSize(horizontal: false, vertical: true)
             }
 
@@ -103,7 +103,7 @@ struct GeneralSettingsTabView: View {
             } header: {
                 Text(appLocalized: "Permissions")
             } footer: {
-                Text(appLocalized: "File Provider: Select \"RClick\" in the list to enable the Finder context menu")
+                Text(appLocalized: "File Provider: Select \"RightSight\" in the list to enable the Finder context menu")
                     .foregroundColor(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -210,7 +210,7 @@ struct GeneralSettingsTabView: View {
     private func exportSettings() {
         let savePanel = NSSavePanel()
         savePanel.allowedContentTypes = [.propertyList]
-        savePanel.nameFieldStringValue = "RClick_Settings.plist"
+        savePanel.nameFieldStringValue = "RightSight_Settings.plist"
         savePanel.begin { response in
             guard response == .OK, let url = savePanel.url else { return }
             // TODO: 实现设置导出逻辑
@@ -234,7 +234,7 @@ struct GeneralSettingsTabView: View {
     private func exportLogs() {
         let savePanel = NSSavePanel()
         savePanel.allowedContentTypes = [.plainText]
-        savePanel.nameFieldStringValue = "RClick_Log.txt"
+        savePanel.nameFieldStringValue = "RightSight_Log.txt"
         savePanel.begin { response in
             guard response == .OK, let url = savePanel.url else { return }
             // TODO: 实现日志导出逻辑

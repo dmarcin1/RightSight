@@ -1,6 +1,6 @@
 //
 //  EditAppSheetView.swift
-//  RClick
+//  RightSight
 //
 //  Created by Claude on 2026/06/28.
 //

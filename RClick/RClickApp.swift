@@ -1,6 +1,6 @@
 //
-//  RClickApp.swift
-//  RClick
+//  RightSightApp.swift
+//  RightSight
 //
 //  Created by 李旭 on 2024/4/4.
 //
@@ -14,11 +14,11 @@ import FinderSync
 import os.log
 
 extension NSNotification.Name {
-    static let menuConfigShouldUpdate = NSNotification.Name("RClick.menuConfigShouldUpdate")
+    static let menuConfigShouldUpdate = NSNotification.Name("RightSight.menuConfigShouldUpdate")
 }
 
 @main
-struct RClickApp: App {
+struct RightSightApp: App {
     @NSApplicationDelegateAdaptor private var appDelegate: AppDelegate
 
     @Environment(\.scenePhase) private var scenePhase
@@ -34,8 +34,8 @@ struct RClickApp: App {
     @StateObject var appState = AppState.shared
 
     @StateObject private var updateManager = UpdateManager(
-        owner: "wflixu",
-        repo: "RClick",
+        owner: "dmarcin1",
+        repo: "RightSight",
         currentVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0.0"
     )
 
@@ -47,7 +47,7 @@ struct RClickApp: App {
 
         // showMenuBarExtra 为 true 时显示菜单条
         MenuBarExtra(
-            "RClick", image: "MenuBar", isInserted: $showMenuBarExtra
+            "RightSight", image: "MenuBar", isInserted: $showMenuBarExtra
         ) {
             MenuBarView()
         }
@@ -68,6 +68,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var showMenuBarExtra = UserDefaults.group.bool(forKey: Key.showMenuBarExtra)
     var showInDock = UserDefaults.group.bool(forKey: Key.showInDock)
     var settingsWindow: NSWindow!
+    private var cutFileBuffer = FileCutBuffer()
 
     // MARK: - 重连机制状态
 
@@ -101,7 +102,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         // 执行数据迁移
-        // TODO: 需要在 Xcode 中将 DataMigrationManager.swift 添加到 RClick target 后取消注释
+        // TODO: 需要在 Xcode 中将 DataMigrationManager.swift 添加到 RightSight target 后取消注释
         Task { @MainActor in
             do {
 //                if DataMigrationManager.shared.needsMigration() {
@@ -124,6 +125,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 // 初始化默认数据
                 let context = ModelContext(SharedDataManager.sharedModelContainer)
                 await SharedDataManager.initializeDefaultData(context: context)
+                appState.refresh()
             }
 
             // Preload icons for all apps to improve performance
@@ -416,9 +418,355 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             await hideFilesAndDirs(target, trigger)
         case "airdrop":
             await showAirDrop(target, trigger)
+        case "convert-images":
+            await convertImages(target, trigger)
+        case "cut-files":
+            await cutFiles(target, trigger)
+        case "paste-files":
+            await pasteFiles(target, trigger)
+        case "copy-to":
+            await transferFilesToChosenFolder(target, trigger, operation: .copy)
+        case "move-to":
+            await transferFilesToChosenFolder(target, trigger, operation: .move)
         default:
             logger.warning("no action id matched")
         }
+    }
+
+    func cutFiles(_ target: [String], _ trigger: String) async {
+        guard trigger == "ctx-items" else {
+            showFileTransferAlert(
+                title: AppLocalization.localized("Select files first"),
+                message: AppLocalization.localized("Select one or more files or folders in Finder, then choose Cut Files."),
+                style: .informational
+            )
+            return
+        }
+
+        let selectedURLs = existingUnprotectedURLs(from: target)
+        let authorizedURLs = await authorizedSourceURLs(selectedURLs)
+        guard !authorizedURLs.isEmpty else {
+            showFileTransferAlert(
+                title: AppLocalization.localized("No files available"),
+                message: AppLocalization.localized("The selected items cannot be cut or access was not granted."),
+                style: .warning
+            )
+            return
+        }
+
+        cutFileBuffer.replace(with: authorizedURLs)
+        showFileTransferAlert(
+            title: AppLocalization.localized("Files cut"),
+            message: String(
+                format: AppLocalization.localized("%d item(s) are ready to move. Right-click the destination folder and choose Paste."),
+                authorizedURLs.count
+            ),
+            style: .informational
+        )
+    }
+
+    func pasteFiles(_ target: [String], _ trigger: String) async {
+        guard !cutFileBuffer.isEmpty else {
+            showFileTransferAlert(
+                title: AppLocalization.localized("Nothing to paste"),
+                message: AppLocalization.localized("Choose Cut Files on one or more items first."),
+                style: .informational
+            )
+            return
+        }
+        guard let destinationURL = destinationDirectory(from: target, trigger: trigger) else {
+            showFileTransferAlert(
+                title: AppLocalization.localized("Choose a destination folder"),
+                message: AppLocalization.localized("Right-click a folder or an empty area inside a folder, then choose Paste."),
+                style: .warning
+            )
+            return
+        }
+        guard await ensureAccess(to: destinationURL) else { return }
+
+        let authorizedURLs = await authorizedSourceURLs(cutFileBuffer.urls)
+        guard !authorizedURLs.isEmpty else { return }
+
+        let result = await performTransfer(authorizedURLs, to: destinationURL, operation: .move)
+        cutFileBuffer.removeSuccessfullyMoved(result.successes)
+        presentTransferResult(
+            result,
+            operation: .move,
+            skippedCount: cutFileBuffer.urls.count - result.failures.count
+        )
+    }
+
+    func transferFilesToChosenFolder(
+        _ target: [String],
+        _ trigger: String,
+        operation: FileTransferOperation
+    ) async {
+        guard trigger == "ctx-items" else {
+            showFileTransferAlert(
+                title: AppLocalization.localized("Select files first"),
+                message: AppLocalization.localized("Select one or more files or folders in Finder first."),
+                style: .informational
+            )
+            return
+        }
+
+        let selectedURLs = existingUnprotectedURLs(from: target)
+        let authorizedURLs = await authorizedSourceURLs(selectedURLs)
+        guard !authorizedURLs.isEmpty else {
+            showFileTransferAlert(
+                title: AppLocalization.localized("No files available"),
+                message: AppLocalization.localized("The selected items cannot be used or access was not granted."),
+                style: .warning
+            )
+            return
+        }
+        guard let destinationURL = chooseDestinationFolder(for: operation, sources: authorizedURLs) else {
+            return
+        }
+
+        if !appState.bookmarkManager.hasAccess(to: destinationURL) {
+            appState.bookmarkManager.saveBookmark(for: destinationURL)
+        }
+
+        let result = await performTransfer(authorizedURLs, to: destinationURL, operation: operation)
+        presentTransferResult(
+            result,
+            operation: operation,
+            skippedCount: target.count - authorizedURLs.count
+        )
+    }
+
+    private func existingUnprotectedURLs(from target: [String]) -> [URL] {
+        target.compactMap { rawPath in
+            let path = rawPath.removingPercentEncoding ?? rawPath
+            guard FileManager.default.fileExists(atPath: path), !Utils.isProtectedFolder(path) else {
+                return nil
+            }
+            return URL(fileURLWithPath: path)
+        }
+    }
+
+    private func authorizedSourceURLs(_ sourceURLs: [URL]) async -> [URL] {
+        var accessByDirectory: [String: Bool] = [:]
+        var authorizedURLs: [URL] = []
+
+        for sourceURL in sourceURLs {
+            let directoryURL = sourceURL.deletingLastPathComponent().standardizedFileURL
+            let directoryPath = directoryURL.path
+            let hasAccess: Bool
+            if let cachedAccess = accessByDirectory[directoryPath] {
+                hasAccess = cachedAccess
+            } else {
+                if !appState.bookmarkManager.hasAccess(to: directoryURL) {
+                    _ = await appState.bookmarkManager.promptForPermission(for: directoryURL)
+                }
+                hasAccess = appState.bookmarkManager.hasAccess(to: directoryURL)
+                accessByDirectory[directoryPath] = hasAccess
+            }
+
+            if hasAccess {
+                authorizedURLs.append(sourceURL)
+            }
+        }
+
+        return authorizedURLs
+    }
+
+    private func ensureAccess(to directoryURL: URL) async -> Bool {
+        if !appState.bookmarkManager.hasAccess(to: directoryURL) {
+            _ = await appState.bookmarkManager.promptForPermission(for: directoryURL)
+        }
+        return appState.bookmarkManager.hasAccess(to: directoryURL)
+    }
+
+    private func destinationDirectory(from target: [String], trigger: String) -> URL? {
+        guard let rawPath = target.first else { return nil }
+        let path = rawPath.removingPercentEncoding ?? rawPath
+        let selectedURL = URL(fileURLWithPath: path)
+        var isDirectory: ObjCBool = false
+
+        guard FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory) else {
+            return nil
+        }
+        if trigger == "ctx-container" || (target.count == 1 && isDirectory.boolValue) {
+            return isDirectory.boolValue ? selectedURL : nil
+        }
+        return selectedURL.deletingLastPathComponent()
+    }
+
+    private func chooseDestinationFolder(
+        for operation: FileTransferOperation,
+        sources: [URL]
+    ) -> URL? {
+        let panel = NSOpenPanel()
+        panel.message = operation == .copy
+            ? AppLocalization.localized("Choose where to copy the selected items.")
+            : AppLocalization.localized("Choose where to move the selected items.")
+        panel.prompt = operation == .copy
+            ? AppLocalization.localized("Copy Here")
+            : AppLocalization.localized("Move Here")
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.canCreateDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.directoryURL = sources.first?.deletingLastPathComponent()
+
+        NSApp.activate(ignoringOtherApps: true)
+        guard panel.runModal() == .OK else { return nil }
+        return panel.url
+    }
+
+    private func performTransfer(
+        _ sourceURLs: [URL],
+        to destinationURL: URL,
+        operation: FileTransferOperation
+    ) async -> FileTransferResult {
+        await Task.detached(priority: .userInitiated) {
+            FileTransferService.transfer(sourceURLs, to: destinationURL, operation: operation)
+        }.value
+    }
+
+    private func presentTransferResult(
+        _ result: FileTransferResult,
+        operation: FileTransferOperation,
+        skippedCount: Int
+    ) {
+        let destinationURLs = result.successes.map(\.destinationURL)
+        if !destinationURLs.isEmpty {
+            NSWorkspace.shared.activateFileViewerSelecting(destinationURLs)
+        }
+
+        let hasIssues = !result.failures.isEmpty || skippedCount > 0
+        var message = String(
+            format: AppLocalization.localized("Completed %d item(s)."),
+            result.successes.count
+        )
+        if skippedCount > 0 {
+            message += " " + String(
+                format: AppLocalization.localized("Skipped %d item(s)."),
+                skippedCount
+            )
+        }
+        if !result.failures.isEmpty {
+            message += "\n\n" + result.failures.prefix(5).map {
+                "\($0.sourceURL.lastPathComponent): \($0.message)"
+            }.joined(separator: "\n")
+        }
+
+        let actionName = operation == .copy
+            ? AppLocalization.localized("Copy")
+            : AppLocalization.localized("Move")
+        showFileTransferAlert(
+            title: hasIssues
+                ? String(format: AppLocalization.localized("%@ finished with errors"), actionName)
+                : String(format: AppLocalization.localized("%@ complete"), actionName),
+            message: message,
+            style: hasIssues ? .warning : .informational
+        )
+    }
+
+    private func showFileTransferAlert(
+        title: String,
+        message: String,
+        style: NSAlert.Style
+    ) {
+        let alert = NSAlert()
+        alert.messageText = title
+        alert.informativeText = message
+        alert.alertStyle = style
+        alert.addButton(withTitle: AppLocalization.localized("OK"))
+        NSApp.activate(ignoringOtherApps: true)
+        alert.runModal()
+    }
+
+    func convertImages(_ target: [String], _ trigger: String) async {
+        guard trigger == "ctx-items" else {
+            let alert = NSAlert()
+            alert.messageText = AppLocalization.localized("Select images first")
+            alert.informativeText = AppLocalization.localized("Select one or more image files in Finder, then choose Convert Images.")
+            alert.alertStyle = .informational
+            alert.addButton(withTitle: AppLocalization.localized("OK"))
+            alert.runModal()
+            return
+        }
+
+        let selectedURLs = target.map { rawPath in
+            URL(fileURLWithPath: rawPath.removingPercentEncoding ?? rawPath)
+        }
+        let imageURLs = selectedURLs.filter { ImageConverter.canRead($0) }
+
+        guard !imageURLs.isEmpty else {
+            let alert = NSAlert()
+            alert.messageText = AppLocalization.localized("No readable images")
+            alert.informativeText = AppLocalization.localized("The selected items do not contain images that RightSight can convert.")
+            alert.alertStyle = .warning
+            alert.addButton(withTitle: AppLocalization.localized("OK"))
+            alert.runModal()
+            return
+        }
+
+        let formatPopup = NSPopUpButton(frame: NSRect(x: 0, y: 0, width: 220, height: 26))
+        formatPopup.addItems(withTitles: ImageOutputFormat.allCases.map(\.displayName))
+
+        let formatAlert = NSAlert()
+        formatAlert.messageText = AppLocalization.localized("Convert Images")
+        formatAlert.informativeText = String(
+            format: AppLocalization.localized("Choose an output format for %d image(s). Original files will be kept."),
+            imageURLs.count
+        )
+        formatAlert.accessoryView = formatPopup
+        formatAlert.addButton(withTitle: AppLocalization.localized("Convert"))
+        formatAlert.addButton(withTitle: AppLocalization.localized("Cancel"))
+        NSApp.activate(ignoringOtherApps: true)
+
+        guard formatAlert.runModal() == .alertFirstButtonReturn else { return }
+        let format = ImageOutputFormat.allCases[formatPopup.indexOfSelectedItem]
+
+        var authorizedURLs: [URL] = []
+        for sourceURL in imageURLs {
+            let directoryURL = sourceURL.deletingLastPathComponent()
+            if !appState.bookmarkManager.hasAccess(to: directoryURL) {
+                _ = await appState.bookmarkManager.promptForPermission(for: directoryURL)
+            }
+            if appState.bookmarkManager.hasAccess(to: directoryURL) {
+                authorizedURLs.append(sourceURL)
+            }
+        }
+
+        var convertedURLs: [URL] = []
+        var failureMessages: [String] = []
+        for sourceURL in authorizedURLs {
+            do {
+                convertedURLs.append(try ImageConverter.convert(sourceURL, to: format))
+            } catch {
+                failureMessages.append("\(sourceURL.lastPathComponent): \(error.localizedDescription)")
+                logger.error("convert image failed: \(sourceURL.path), \(error.localizedDescription)")
+            }
+        }
+
+        if !convertedURLs.isEmpty {
+            NSWorkspace.shared.activateFileViewerSelecting(convertedURLs)
+        }
+
+        let skippedCount = selectedURLs.count - imageURLs.count + imageURLs.count - authorizedURLs.count
+        let resultAlert = NSAlert()
+        resultAlert.messageText = failureMessages.isEmpty
+            ? AppLocalization.localized("Conversion complete")
+            : AppLocalization.localized("Conversion finished with errors")
+        var summary = String(
+            format: AppLocalization.localized("Created %d image(s)."),
+            convertedURLs.count
+        )
+        if skippedCount > 0 {
+            summary += " " + String(format: AppLocalization.localized("Skipped %d item(s)."), skippedCount)
+        }
+        if !failureMessages.isEmpty {
+            summary += "\n\n" + failureMessages.prefix(5).joined(separator: "\n")
+        }
+        resultAlert.informativeText = summary
+        resultAlert.alertStyle = failureMessages.isEmpty ? .informational : .warning
+        resultAlert.addButton(withTitle: AppLocalization.localized("OK"))
+        resultAlert.runModal()
     }
 
     func showAirDrop(_ target: [String], _ trigger: String) async {

@@ -1,6 +1,6 @@
 //
 //  AppState.swift
-//  RClick
+//  RightSight
 //
 //  Created by 李旭 on 2024/9/26.
 //
@@ -245,6 +245,20 @@ class AppState: ObservableObject {
                 icon: entity.icon
             )
         } ?? []
+        let existingActionIDs = Set(actions.map(\.id))
+        let missingActions = RCAction.all.filter { !existingActionIDs.contains($0.id) }
+        if !missingActions.isEmpty, !actions.isEmpty {
+            actions.append(contentsOf: missingActions)
+            do {
+                for action in missingActions {
+                    context.insert(ActionEntity(from: action))
+                }
+                try context.save()
+                logger.info("已持久化 \(missingActions.count) 个新增动作")
+            } catch {
+                logger.warning("新增动作暂未持久化，已保留在当前菜单：\(error.localizedDescription)")
+            }
+        }
 
         // 加载 NewFiles
         let newFileDescriptor = FetchDescriptor<NewFileTypeEntity>(sortBy: [SortDescriptor(\.sortOrder)])

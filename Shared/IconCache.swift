@@ -1,6 +1,6 @@
 //
 //  IconCache.swift
-//  RClick
+//  RightSight
 //
 //  统一的图标缓存管理器
 //
