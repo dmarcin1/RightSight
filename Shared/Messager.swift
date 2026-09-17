@@ -234,10 +234,15 @@ class Messager: @unchecked Sendable {
 
     private let isExtension: Bool
 
-    private init() {
+    init() {
         // 判断当前是否为 Extension 进程
-        let bundleId = Bundle.main.bundleIdentifier ?? ""
-        self.isExtension = bundleId.hasSuffix(".FinderSyncExt")
+        let mainBundlePath = Bundle.main.bundlePath
+        let selfBundle = Bundle(for: Messager.self)
+        let selfBundlePath = selfBundle.bundlePath
+        let selfBundleId = selfBundle.bundleIdentifier ?? ""
+        self.isExtension = mainBundlePath.hasSuffix(".appex")
+            || selfBundlePath.hasSuffix(".appex")
+            || selfBundleId.hasSuffix(".FinderSyncExt")
 
         // Danger note: DistributedNotificationCenter 初始化线程安全
         let center = DistributedNotificationCenter.default()

@@ -132,13 +132,52 @@ final class FileTypeIconProvider: @unchecked Sendable {
 
 extension NSImage {
     func resized(to newSize: NSSize) -> NSImage {
-        let img = NSImage(size: newSize)
-        img.lockFocus()
-        draw(in: NSRect(origin: .zero, size: newSize),
-             from: .zero,
-             operation: .copy,
-             fraction: 1)
-        img.unlockFocus()
-        return img
+        let scale: CGFloat = 2.0 // 2x Retina backing
+        let pixelWidth = max(1, Int(newSize.width * scale))
+        let pixelHeight = max(1, Int(newSize.height * scale))
+
+        if let rep = NSBitmapImageRep(
+            bitmapDataPlanes: nil,
+            pixelsWide: pixelWidth,
+            pixelsHigh: pixelHeight,
+            bitsPerSample: 8,
+            samplesPerPixel: 4,
+            hasAlpha: true,
+            isPlanar: false,
+            colorSpaceName: .calibratedRGB,
+            bytesPerRow: 0,
+            bitsPerPixel: 0
+        ) {
+            rep.size = newSize
+            NSGraphicsContext.saveGraphicsState()
+            if let context = NSGraphicsContext(bitmapImageRep: rep) {
+                NSGraphicsContext.current = context
+                context.imageInterpolation = .high
+                self.draw(
+                    in: NSRect(origin: .zero, size: newSize),
+                    from: NSRect(origin: .zero, size: self.size),
+                    operation: .sourceOver,
+                    fraction: 1.0
+                )
+            }
+            NSGraphicsContext.restoreGraphicsState()
+
+            let result = NSImage(size: newSize)
+            result.addRepresentation(rep)
+            result.isTemplate = self.isTemplate
+            return result
+        }
+
+        let fallback = NSImage(size: newSize)
+        fallback.lockFocus()
+        self.draw(
+            in: NSRect(origin: .zero, size: newSize),
+            from: NSRect(origin: .zero, size: self.size),
+            operation: .copy,
+            fraction: 1.0
+        )
+        fallback.unlockFocus()
+        fallback.isTemplate = self.isTemplate
+        return fallback
     }
 }

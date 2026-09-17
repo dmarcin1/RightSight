@@ -21,13 +21,13 @@ struct SettingsWindow: Scene {
                 .onAppear {
                     onAppear()
                 }
-                .frame(minWidth: 700, minHeight: 480)
+                .frame(minWidth: 820, minHeight: 560)
                 .sheet(isPresented: $updateManager.showUpdateSheet) {
                     UpdateView(updateManager: updateManager)
                 }
         }
         .windowResizability(.contentSize)
-        .defaultSize(width: 700, height: 480)
+        .defaultSize(width: 920, height: 640)
     }
     
 }

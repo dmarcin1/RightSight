@@ -26,8 +26,6 @@ struct EditFileTypeSheetView: View {
     @State private var showSelectApp = false
     @State private var showSelectTemplate = false
 
-    let messager = Messager.shared
-
     private let iconToSF: [String: String] = [
         "icon-file-json": "curlybraces",
         "icon-file-txt": "doc.text",
@@ -52,10 +50,13 @@ struct EditFileTypeSheetView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Text(appLocalized: isAdding ? "Add File Type" : "Edit File Type")
-                .font(.headline)
-                .padding(.top, 20)
-                .padding(.bottom, 12)
+            SettingsSheetHeader(
+                title: isAdding ? "Add File Type" : "Edit File Type",
+                subtitle: "Choose a name, extension, and optional template.",
+                systemImage: "doc.badge.plus"
+            )
+
+            Divider()
 
             Form {
                 Section {
@@ -185,19 +186,25 @@ struct EditFileTypeSheetView: View {
                 }
                 .keyboardShortcut(.escape)
 
+                Spacer()
+
                 Button(AppLocalization.localized(isAdding ? "Add" : "Save")) {
                     saveChanges()
                     dismiss()
                 }
+                .buttonStyle(.borderedProminent)
                 .keyboardShortcut(.return)
-                .disabled(name.isEmpty || ext.isEmpty)
+                .disabled(normalizedName.isEmpty || normalizedExtension.isEmpty)
             }
-            .padding(.bottom, 20)
+            .padding(20)
         }
-        .frame(width: 440, height: 580)
+        .frame(width: 480, height: 620)
     }
 
     private func saveChanges() {
+        name = normalizedName
+        ext = normalizedExtension.hasPrefix(".") ? normalizedExtension : ".\(normalizedExtension)"
+
         if isAdding {
             var newFile = NewFile(
                 ext: ext,
@@ -209,12 +216,7 @@ struct EditFileTypeSheetView: View {
                 newFile.openApp = app
             }
             if let templateUrl = template {
-                if let templateDir = templatesDir {
-                    try? FileManager.default.createDirectory(at: templateDir, withIntermediateDirectories: true)
-                    let destUrl = templateDir.appendingPathComponent(templateUrl.lastPathComponent)
-                    try? FileManager.default.copyItem(at: templateUrl, to: destUrl)
-                    newFile.template = destUrl
-                }
+                newFile.template = saveTemplateFile(from: templateUrl)
             }
             appState.addNewFile(newFile)
         } else {
@@ -225,12 +227,9 @@ struct EditFileTypeSheetView: View {
                 updatedFile.icon = icon
                 updatedFile.openApp = openApp
                 if let templateUrl = template {
-                    if let templateDir = templatesDir {
-                        try? FileManager.default.createDirectory(at: templateDir, withIntermediateDirectories: true)
-                        let destUrl = templateDir.appendingPathComponent(templateUrl.lastPathComponent)
-                        try? FileManager.default.copyItem(at: templateUrl, to: destUrl)
-                        updatedFile.template = destUrl
-                    }
+                    updatedFile.template = saveTemplateFile(from: templateUrl)
+                } else {
+                    updatedFile.template = nil
                 }
                 appState.newFiles[index] = updatedFile
             }
@@ -238,6 +237,32 @@ struct EditFileTypeSheetView: View {
         Task { @MainActor in
             appState.sync()
         }
-        messager.sendRunningNotification()
+    }
+
+    private func saveTemplateFile(from sourceUrl: URL) -> URL? {
+        guard let templateDir = templatesDir else { return nil }
+        let fm = FileManager.default
+        try? fm.createDirectory(at: templateDir, withIntermediateDirectories: true)
+        let destUrl = templateDir.appendingPathComponent(sourceUrl.lastPathComponent)
+        if destUrl.standardized.path == sourceUrl.standardized.path {
+            return destUrl
+        }
+        if fm.fileExists(atPath: destUrl.path) {
+            try? fm.removeItem(at: destUrl)
+        }
+        do {
+            try fm.copyItem(at: sourceUrl, to: destUrl)
+            return destUrl
+        } catch {
+            return nil
+        }
+    }
+
+    private var normalizedName: String {
+        name.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private var normalizedExtension: String {
+        ext.trimmingCharacters(in: CharacterSet(charactersIn: ". ").union(.newlines))
     }
 }

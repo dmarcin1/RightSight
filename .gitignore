@@ -57,6 +57,7 @@ playground.xcworkspace
 
 output/*
 Build/
+build/
 *.profraw
 DerivedData/
 .claude/settings.local.json

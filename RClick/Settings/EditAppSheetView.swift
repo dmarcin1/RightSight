@@ -29,10 +29,13 @@ struct EditAppSheetView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Text(appLocalized: "Edit App Properties")
-                .font(.headline)
-                .padding(.top, 20)
-                .padding(.bottom, 12)
+            SettingsSheetHeader(
+                title: "Edit App Properties",
+                subtitle: "Customize how this app appears and launches from Finder.",
+                systemImage: "app.badge"
+            )
+
+            Divider()
 
             Form {
                 Section {
@@ -72,15 +75,19 @@ struct EditAppSheetView: View {
                 }
                 .keyboardShortcut(.escape)
 
+                Spacer()
+
                 Button(AppLocalization.localized("Save")) {
                     saveChanges()
                     dismiss()
                 }
+                .buttonStyle(.borderedProminent)
                 .keyboardShortcut(.return)
+                .disabled(itemName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
-            .padding(.bottom, 20)
+            .padding(20)
         }
-        .frame(width: 400, height: 480)
+        .frame(width: 460, height: 520)
     }
 
     private func saveChanges() {

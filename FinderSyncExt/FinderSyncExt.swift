@@ -81,9 +81,24 @@ class FinderSyncExt: FIFinderSync, @unchecked Sendable {
     /// FinderSync menus; that is a macOS restriction on all FinderSync
     /// extensions, not something an observation URL can change.
     private func setupObservingDirectories() {
-        let directories: Set<URL> = [URL(fileURLWithPath: "/")]
+        let homeDir = URL(fileURLWithPath: Self.getRealHomeDir())
+        let directories: Set<URL> = [
+            URL(fileURLWithPath: "/"),
+            homeDir,
+            URL(fileURLWithPath: "/Volumes")
+        ]
         FIFinderSyncController.default().directoryURLs = directories
         logger.info("Observing directories: \(directories.map { $0.path })")
+    }
+
+    private static func getRealHomeDir() -> String {
+        if let pw = getpwuid(getuid()), let dir = pw.pointee.pw_dir {
+            return FileManager.default.string(withFileSystemRepresentation: dir, length: strlen(dir))
+        }
+        let fullPath = NSHomeDirectory()
+        let components = fullPath.components(separatedBy: "/")
+        let limitedComponents = Array(components.prefix(3))
+        return limitedComponents.joined(separator: "/")
     }
 
     // MARK: - Message Handling
@@ -172,9 +187,19 @@ class FinderSyncExt: FIFinderSync, @unchecked Sendable {
     }
 
     override var toolbarItemImage: NSImage {
-        let image = NSImage(named: "toolbar") ?? NSImage()
-        image.isTemplate = true
-        return image
+        if let image = NSImage(named: "toolbar"), image.size.width > 0 {
+            image.isTemplate = true
+            return image
+        }
+        let config = NSImage.SymbolConfiguration(pointSize: 15, weight: .medium)
+        if let symbol = NSImage(systemSymbolName: "sidebar.squares.right", accessibilityDescription: "RightSight")?
+            .withSymbolConfiguration(config) {
+            symbol.isTemplate = true
+            return symbol
+        }
+        let fallback = NSImage(systemSymbolName: "cursorarrow.rays", accessibilityDescription: "RightSight") ?? NSImage()
+        fallback.isTemplate = true
+        return fallback
     }
 
     /// 当前菜单触发类型（工具栏 or 右键）
@@ -182,15 +207,24 @@ class FinderSyncExt: FIFinderSync, @unchecked Sendable {
 
     // MARK: - Icon Helpers
 
+    private func fetchWorkspaceIcon(for appURL: String) -> NSImage {
+        if Thread.isMainThread {
+            return NSWorkspace.shared.icon(forFile: appURL)
+        } else {
+            return DispatchQueue.main.sync {
+                NSWorkspace.shared.icon(forFile: appURL)
+            }
+        }
+    }
+
     /// 获取 App 图标（带缓存）
     private func cachedAppIcon(app: AppMenuItem) -> NSImage? {
         if let appURL = app.appURL {
             let cacheKey = "app:\(appURL)"
             if let cached = iconCache[cacheKey] { return cached }
-            let icon: NSImage = DispatchQueue.main.sync {
-                NSWorkspace.shared.icon(forFile: appURL)
-            }
-            if icon.size.width > 0 {
+            let rawIcon = fetchWorkspaceIcon(for: appURL)
+            if rawIcon.size.width > 0 {
+                let icon = rawIcon.resized(to: NSSize(width: 18, height: 18))
                 iconCache[cacheKey] = icon
                 return icon
             }
@@ -262,6 +296,7 @@ class FinderSyncExt: FIFinderSync, @unchecked Sendable {
                 for action in config.actions {
                     let item = NSMenuItem(title: action.name, action: #selector(handleActionClick(_:)), keyEquivalent: "")
                     item.tag = hashForAction(action)
+                    item.representedObject = action.id
                     item.target = self
                     if let icon = templateSymbol(action.icon) {
                         item.image = icon
@@ -277,6 +312,7 @@ class FinderSyncExt: FIFinderSync, @unchecked Sendable {
                 for action in config.actions {
                     let item = NSMenuItem(title: action.name, action: #selector(handleActionClick(_:)), keyEquivalent: "")
                     item.tag = hashForAction(action)
+                    item.representedObject = action.id
                     item.target = self
                     if let icon = templateSymbol(action.icon) {
                         item.image = icon
@@ -295,6 +331,7 @@ class FinderSyncExt: FIFinderSync, @unchecked Sendable {
                 for app in config.apps {
                     let item = NSMenuItem(title: app.name, action: #selector(handleAppClick(_:)), keyEquivalent: "")
                     item.tag = hashForApp(app)
+                    item.representedObject = app.id
                     item.target = self
                     item.image = cachedAppIcon(app: app)
                     appsSubMenu.addItem(item)
@@ -308,6 +345,7 @@ class FinderSyncExt: FIFinderSync, @unchecked Sendable {
                 for app in config.apps {
                     let item = NSMenuItem(title: app.name, action: #selector(handleAppClick(_:)), keyEquivalent: "")
                     item.tag = hashForApp(app)
+                    item.representedObject = app.id
                     item.target = self
                     item.image = cachedAppIcon(app: app)
                     menu.addItem(item)
@@ -324,6 +362,7 @@ class FinderSyncExt: FIFinderSync, @unchecked Sendable {
                 for newFile in config.newFiles {
                     let item = NSMenuItem(title: newFile.name, action: #selector(handleNewFileClick(_:)), keyEquivalent: "")
                     item.tag = hashForNewFile(newFile)
+                    item.representedObject = newFile.id
                     item.target = self
                     item.image = iconProvider.icon(for: newFile.ext, fallbackSymbol: newFile.icon)
                     item.image?.accessibilityDescription = newFile.name
@@ -338,6 +377,7 @@ class FinderSyncExt: FIFinderSync, @unchecked Sendable {
                 for newFile in config.newFiles {
                     let item = NSMenuItem(title: newFile.name, action: #selector(handleNewFileClick(_:)), keyEquivalent: "")
                     item.tag = hashForNewFile(newFile)
+                    item.representedObject = newFile.id
                     item.target = self
                     item.image = iconProvider.icon(for: newFile.ext, fallbackSymbol: newFile.icon)
                     item.image?.accessibilityDescription = newFile.name
@@ -355,6 +395,7 @@ class FinderSyncExt: FIFinderSync, @unchecked Sendable {
                 for commonDir in config.commonDirs {
                     let item = NSMenuItem(title: commonDir.name, action: #selector(handleCommonDirClick(_:)), keyEquivalent: "")
                     item.tag = hashForCommonDir(commonDir)
+                    item.representedObject = commonDir.id
                     item.target = self
                     item.image = loadIcon(named: commonDir.icon, accessibilityDescription: commonDir.name)
                     commonDirsSubMenu.addItem(item)
@@ -368,6 +409,7 @@ class FinderSyncExt: FIFinderSync, @unchecked Sendable {
                 for commonDir in config.commonDirs {
                     let item = NSMenuItem(title: commonDir.name, action: #selector(handleCommonDirClick(_:)), keyEquivalent: "")
                     item.tag = hashForCommonDir(commonDir)
+                    item.representedObject = commonDir.id
                     item.target = self
                     item.image = loadIcon(named: commonDir.icon, accessibilityDescription: commonDir.name)
                     menu.addItem(item)
@@ -400,7 +442,9 @@ class FinderSyncExt: FIFinderSync, @unchecked Sendable {
 
     @objc private func handleActionClick(_ sender: NSMenuItem) {
         guard let config = cachedMenuConfig,
-              let action = config.actions.first(where: { hashForAction($0) == sender.tag }) else {
+              let action = config.actions.first(where: {
+                  ($0.id == (sender.representedObject as? String)) || hashForAction($0) == sender.tag
+              }) else {
             logger.warning("Action not found for tag: \(sender.tag)")
             return
         }
@@ -426,7 +470,9 @@ class FinderSyncExt: FIFinderSync, @unchecked Sendable {
         logger.debug("handleAppClick called with sender: \(sender.title), tag: \(sender.tag)")
 
         guard let config = cachedMenuConfig,
-              let app = config.apps.first(where: { hashForApp($0) == sender.tag }) else {
+              let app = config.apps.first(where: {
+                  ($0.id == (sender.representedObject as? String)) || hashForApp($0) == sender.tag
+              }) else {
             logger.warning("App not found for tag: \(sender.tag)")
             return
         }
@@ -449,7 +495,9 @@ class FinderSyncExt: FIFinderSync, @unchecked Sendable {
 
     @objc private func handleNewFileClick(_ sender: NSMenuItem) {
         guard let config = cachedMenuConfig,
-              let newFile = config.newFiles.first(where: { hashForNewFile($0) == sender.tag }) else {
+              let newFile = config.newFiles.first(where: {
+                  ($0.id == (sender.representedObject as? String)) || hashForNewFile($0) == sender.tag
+              }) else {
             logger.warning("NewFile not found for tag: \(sender.tag)")
             return
         }
@@ -467,7 +515,9 @@ class FinderSyncExt: FIFinderSync, @unchecked Sendable {
 
     @objc private func handleCommonDirClick(_ sender: NSMenuItem) {
         guard let config = cachedMenuConfig,
-              let commonDir = config.commonDirs.first(where: { hashForCommonDir($0) == sender.tag }) else {
+              let commonDir = config.commonDirs.first(where: {
+                  ($0.id == (sender.representedObject as? String)) || hashForCommonDir($0) == sender.tag
+              }) else {
             logger.warning("CommonDir not found for tag: \(sender.tag)")
             return
         }

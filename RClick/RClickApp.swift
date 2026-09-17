@@ -295,6 +295,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         logger.debug("常用目录打开操作完成")
     }
 
+    private func revealInFinderAndRename(_ fileURL: URL) {
+        NSWorkspace.shared.activateFileViewerSelecting([fileURL])
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) { [logger] in
+            guard let finderApp = NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.finder").first else {
+                return
+            }
+            finderApp.activate(options: .activateIgnoringOtherApps)
+
+            guard PermissionChecker.hasAccessibilityPermission() else {
+                logger.debug("Accessibility permission not granted; skipping auto-rename trigger for \(fileURL.path)")
+                return
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                guard let frontApp = NSWorkspace.shared.frontmostApplication,
+                      frontApp.bundleIdentifier == "com.apple.finder" else {
+                    logger.debug("Finder is not frontmost, skipping synthetic Return key event")
+                    return
+                }
+
+                let keyCodeReturn: CGKeyCode = 36
+                let source = CGEventSource(stateID: .hidSystemState)
+                let keyDown = CGEvent(keyboardEventSource: source, virtualKey: keyCodeReturn, keyDown: true)
+                let keyUp = CGEvent(keyboardEventSource: source, virtualKey: keyCodeReturn, keyDown: false)
+                keyDown?.post(tap: .cghidEventTap)
+                keyUp?.post(tap: .cghidEventTap)
+            }
+        }
+    }
+
     func openApp(rid: String, target: [String]) {
         guard let rcitem = appState.getAppItem(rid: rid) else {
             logger.warning("when openapp, but not have app \(rid)")
@@ -304,43 +335,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let appUrl = rcitem.url
         logger.debug("openApp: rid=\(rid) app=\(appUrl.path) target=\(target)")
 
-        for dirPath in target {
-            let dir = URL(fileURLWithPath: dirPath.removingPercentEncoding ?? dirPath, isDirectory: true)
+        let targetURLs = target.compactMap { rawPath -> URL? in
+            let path = rawPath.removingPercentEncoding ?? rawPath
+            guard !path.isEmpty else { return nil }
+            return URL(fileURLWithPath: path)
+        }
 
-            // 特殊处理：WezTerm
-            if appUrl.path.hasSuffix("WezTerm.app") {
-                let process = Process()
-                process.executableURL = URL(fileURLWithPath: "/Users/lixu/play/rpm/target/debug/rpm")
-                process.arguments = ["--name", "arg2"]
+        guard !targetURLs.isEmpty else { return }
 
-                let pipe = Pipe()
-                process.standardOutput = pipe
-                process.standardError = pipe
+        let config = NSWorkspace.OpenConfiguration()
+        if !rcitem.arguments.isEmpty {
+            config.arguments = rcitem.arguments
+        }
+        if !rcitem.environment.isEmpty {
+            config.environment = rcitem.environment
+        }
 
-                do {
-                    try process.run()
-                    process.waitUntilExit()
-
-                    let data = pipe.fileHandleForReading.readDataToEndOfFile()
-                    if let output = String(data: data, encoding: .utf8) {
-                        print("Output: \(output)")
-                    }
-                } catch {
-                    print("Error: \(error)")
-                }
-            }
-            // 通用处理：使用 NSWorkspace 打开目录
-            else {
-                let config = NSWorkspace.OpenConfiguration()
-                let logger = self.logger  // 捕获 Sendable logger
-                NSWorkspace.shared.open([dir], withApplicationAt: appUrl, configuration: config) { runningApp, error in
-                    if let error = error {
-                        logger.error("Error opening with application: \(error.localizedDescription)")
-                        logger.error("Error code: \((error as NSError).code), domain: \((error as NSError).domain)")
-                    } else if let runningApp = runningApp {
-                        logger.debug("Successfully opened with application: \(runningApp.localizedName ?? "Unknown")")
-                    }
-                }
+        let logger = self.logger
+        NSWorkspace.shared.open(targetURLs, withApplicationAt: appUrl, configuration: config) { runningApp, error in
+            if let error = error {
+                logger.error("Error opening with application: \(error.localizedDescription)")
+            } else if let runningApp = runningApp {
+                logger.debug("Successfully opened with application: \(runningApp.localizedName ?? "Unknown")")
             }
         }
     }
@@ -378,28 +394,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return path
     }
 
-    private func revealInFinderAndRename(_ fileURL: URL) {
-        NSWorkspace.shared.activateFileViewerSelecting([fileURL])
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) { [logger] in
-            let options = ["AXTrustedCheckOptionPrompt": true] as CFDictionary
-            guard AXIsProcessTrustedWithOptions(options) else {
-                logger.warning("Accessibility permission is required to trigger Finder rename for \(fileURL.path)")
-                return
-            }
-
-            NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.finder").first?.activate()
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                let keyCodeReturn: CGKeyCode = 36
-                let source = CGEventSource(stateID: .hidSystemState)
-                let keyDown = CGEvent(keyboardEventSource: source, virtualKey: keyCodeReturn, keyDown: true)
-                let keyUp = CGEvent(keyboardEventSource: source, virtualKey: keyCodeReturn, keyDown: false)
-                keyDown?.post(tap: .cghidEventTap)
-                keyUp?.post(tap: .cghidEventTap)
-            }
-        }
-    }
 
     func actionHandler(rid: String, target: [String], trigger: String) async {
         guard let rcitem = appState.getActionItem(rid: rid) else {

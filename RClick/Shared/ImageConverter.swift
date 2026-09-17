@@ -44,13 +44,13 @@ enum ImageConversionError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .unreadableImage:
-            "无法读取图片"
+            AppLocalization.localized("Unable to read image")
         case .cannotCreateDestination:
-            "无法创建目标图片"
+            AppLocalization.localized("Cannot create destination image")
         case .cannotFinalize:
-            "图片写入失败"
+            AppLocalization.localized("Failed to write image data")
         case .webPEncodingFailed:
-            "WebP 编码失败"
+            AppLocalization.localized("WebP encoding failed")
         }
     }
 }

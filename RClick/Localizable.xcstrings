@@ -3563,6 +3563,168 @@
         "zh-Hans": { "stringUnit": { "state": "translated", "value": "所选项目无法操作，或尚未授予访问权限。" } }
       }
     },
+    "About RightSight": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "关于右见" } }
+      }
+    },
+    "Add an app to open selected Finder items from the context menu.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "添加应用后，即可从右键菜单打开 Finder 中选中的项目。" } }
+      }
+    },
+    "Add a file type or restore the defaults to create files from Finder.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "添加文件类型或恢复默认设置，即可直接从 Finder 新建文件。" } }
+      }
+    },
+    "Add folders you visit often to reach them from Finder's context menu.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "添加常用文件夹，以便从 Finder 右键菜单快速访问。" } }
+      }
+    },
+    "Arrange the file actions you use most often.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "排列你最常用的文件操作。" } }
+      }
+    },
+    "Choose a name, extension, and optional template.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "设置名称、扩展名和可选模板。" } }
+      }
+    },
+    "Choose the apps that appear in the Finder context menu.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "选择要显示在 Finder 右键菜单中的应用。" } }
+      }
+    },
+    "Choose where RightSight may manage files.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "选择允许右见管理文件的位置。" } }
+      }
+    },
+    "Control startup, permissions, and menu bar behavior.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "管理启动方式、权限与菜单栏行为。" } }
+      }
+    },
+    "Create files from your own types and templates.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "使用自定义类型和模板快速新建文件。" } }
+      }
+    },
+    "Customize how this app appears and launches from Finder.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "自定义此应用在 Finder 中的名称和启动方式。" } }
+      }
+    },
+    "Finder Extension Disabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "Finder 扩展未启用" } }
+      }
+    },
+    "Finder Extension Enabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "Finder 扩展已启用" } }
+      }
+    },
+    "Finder tools, right where you need them.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "常用 Finder 工具，右键即可使用。" } }
+      }
+    },
+    "GNU GPL v3 License": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "GNU GPL v3 许可证" } }
+      }
+    },
+    "Keep frequently used folders one click away.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "让常用文件夹随时触手可及。" } }
+      }
+    },
+    "No actions available": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "暂无可用操作" } }
+      }
+    },
+    "No apps added": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "尚未添加应用" } }
+      }
+    },
+    "No file types added": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "尚未添加文件类型" } }
+      }
+    },
+    "No folders added": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "尚未添加文件夹" } }
+      }
+    },
+    "Project": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "项目" } }
+      }
+    },
+    "Remove folder": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "移除文件夹" } }
+      }
+    },
+    "Restore the default actions to rebuild this menu.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "恢复默认操作以重新构建此菜单。" } }
+      }
+    },
+    "Settings Error": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "设置错误" } }
+      }
+    },
+    "This settings backup was created by an unsupported version of RightSight.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "此设置备份由不受支持的右见版本创建。" } }
+      }
+    },
+    "Version, updates, and project information.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "查看版本、更新与项目信息。" } }
+      }
+    },
+    "View Source Code": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "查看源代码" } }
+      }
+    },
     "Warning": {
       "extractionState": "manual",
       "localizations": {

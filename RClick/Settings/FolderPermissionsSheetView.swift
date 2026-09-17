@@ -13,18 +13,22 @@ struct FolderPermissionsSheetView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Text(AppLocalization.localized("Folder Permissions"))
-                .font(.headline)
-                .padding(.top, 20)
-                .padding(.bottom, 12)
+            SettingsSheetHeader(
+                title: "Folder Permissions",
+                subtitle: "Choose where RightSight may manage files.",
+                systemImage: "folder.badge.person.crop"
+            )
+
+            Divider()
 
             if bookmarkManager.authorizedDirectories.isEmpty {
                 VStack(spacing: 8) {
                     Image(systemName: "folder.badge.questionmark")
-                        .font(.largeTitle)
-                        .foregroundColor(.secondary)
+                        .font(.system(size: 34, weight: .light))
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(Color.accentColor)
                     Text(AppLocalization.localized("No folders authorized"))
-                        .foregroundColor(.secondary)
+                        .font(.headline)
                     Text(AppLocalization.localized("Authorize folders to let RightSight create, delete, and manage files in them."))
                         .font(.caption)
                         .foregroundColor(.secondary)
@@ -73,6 +77,7 @@ struct FolderPermissionsSheetView: View {
                 Button(AppLocalization.localized("Done")) {
                     dismiss()
                 }
+                .buttonStyle(.borderedProminent)
                 .keyboardShortcut(.escape)
             }
             .padding()

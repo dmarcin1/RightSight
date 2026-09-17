@@ -7,7 +7,10 @@
 
 import Combine
 import Foundation
+import OSLog
 import SwiftUI
+
+private let logger = Logger(subsystem: "RightSight", category: "Updater")
 
 // MARK: - 数据模型
 
@@ -71,7 +74,7 @@ class UpdatePreferences: ObservableObject {
             do {
                 ignoredVersionData = try JSONEncoder().encode(newValue)
             } catch {
-                print("Failed to save ignored versions: \(error)")
+                logger.error("Failed to save ignored versions: \(error.localizedDescription)")
             }
         }
     }
@@ -105,7 +108,7 @@ class GitHubReleaseChecker {
     // 获取最新release
     func fetchLatestRelease() async throws -> GitHubRelease {
         let url = URL(string: "https://api.github.com/repos/\(owner)/\(repo)/releases/latest")!
-        print(url)
+        logger.debug("Fetching release from: \(url.absoluteString, privacy: .public)")
         var request = URLRequest(url: url)
         request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
         
@@ -122,7 +125,7 @@ class GitHubReleaseChecker {
     
     // 检查是否需要更新
     func checkForUpdate(currentVersion: String, includePrereleases: Bool = false) async -> GitHubRelease? {
-        print(currentVersion)
+        logger.debug("Checking updates for version: \(currentVersion, privacy: .public)")
         do {
             let latestRelease = try await fetchLatestRelease()
             
@@ -135,10 +138,10 @@ class GitHubReleaseChecker {
             if compareVersions(currentVersion, latestRelease.version) == .orderedAscending {
                 return latestRelease
             } else {
-                print("the last verison \(latestRelease.version)")
+                logger.debug("Latest release is: \(latestRelease.version, privacy: .public)")
             }
         } catch {
-            print("检查更新失败: \(error)")
+            logger.error("Failed to check for updates: \(error.localizedDescription)")
         }
         
         return nil
@@ -206,14 +209,14 @@ class UpdateManager: ObservableObject {
         defer { isChecking = false }
         
         guard let release = await githubChecker.checkForUpdate(currentVersion: currentVersion) else {
-            print("not release")
+            logger.info("No newer release found.")
             updateError = AppLocalization.localized("The current version is already up to date.")
             return
         }
             
         // 检查用户是否忽略了此版本
         if !force && preferences.isVersionIgnored(release.version) {
-            print("忽略这个版本")
+            logger.info("Version \(release.version, privacy: .public) is ignored by user preferences.")
             updateError = String(format: AppLocalization.localized("Version %@ is ignored"), release.version)
             return
         }
@@ -224,17 +227,17 @@ class UpdateManager: ObservableObject {
     // MARK: - 下载和安装方法
 
     func downloadAndInstallUpdate() async {
-        print("start downloadAndInstallUpdate")
+        logger.info("Starting download and installation of update")
         guard let release = availableUpdate else {
             updateError = AppLocalization.localized("No update is available.")
-            print("没有可用的更新")
+            logger.info("No update is available to download.")
             return
         }
         
         // 查找 .app.zip 附件
         guard let appZipAsset = release.assets.first(where: { $0.name.lowercased().hasSuffix(".app.zip") }) else {
             updateError = AppLocalization.localized("No .app.zip application package was found.")
-            print("没有可用的更新")
+            logger.error("No .app.zip application package found in release.")
             return
         }
         
@@ -266,7 +269,7 @@ class UpdateManager: ObservableObject {
     }
 
     func downloadAsset(asset: GitHubRelease.Asset) async throws -> URL {
-        print("start downloadAsset:\(asset.browserDownloadUrl)")
+        logger.info("Downloading asset: \(asset.name, privacy: .public)")
         let tempDir = FileManager.default.temporaryDirectory
         let downloadURL = tempDir.appendingPathComponent(asset.name)
         
@@ -278,10 +281,8 @@ class UpdateManager: ObservableObject {
             // Stream bytes and write to destination file
             let session = URLSession(configuration: .default, delegate: nil, delegateQueue: nil)
             let task = session.downloadTask(with: request) { tempURL, response, error in
-
-                print("start do")
                 if let error = error {
-                    print("downn error")
+                    logger.error("Download task error: \(error.localizedDescription)")
                     continuation.resume(throwing: error)
                     return
                 }
@@ -290,8 +291,8 @@ class UpdateManager: ObservableObject {
                       let httpResponse = response as? HTTPURLResponse,
                       httpResponse.statusCode == 200
                 else {
+                    logger.error("Download failed due to invalid server response")
                     continuation.resume(throwing: DownloadError.downloadFailed("下载失败"))
-                    print("downn error")
                     return
                 }
 
@@ -299,7 +300,7 @@ class UpdateManager: ObservableObject {
                     // 移动文件到目标位置
                     try? FileManager.default.removeItem(at: downloadURL)
                     try FileManager.default.moveItem(at: tempURL, to: downloadURL)
-                    print("download url: \(downloadURL.path)")
+                    logger.info("Download asset saved to \(downloadURL.path, privacy: .public)")
                     continuation.resume(returning: downloadURL)
                 } catch {
                     continuation.resume(throwing: error)
@@ -380,11 +381,11 @@ class UpdateManager: ObservableObject {
         let fileManager = FileManager.default
         let applicationsURL = fileManager.urls(for: .applicationDirectory, in: .localDomainMask).first!
         let destinationAppURL = applicationsURL.appendingPathComponent(appURL.lastPathComponent)
-        print("start install \(appURL.path) --- \(destinationAppURL.path)")
+        logger.info("Installing application from \(appURL.path, privacy: .public) to \(destinationAppURL.path, privacy: .public)")
         // 安装之前，先检查一下destinationAppURL 是否有权限读写，如果没有权限，请求权限
-         // 检查对应用程序文件夹的写入权限
+        // 检查对应用程序文件夹的写入权限
         if !fileManager.isWritableFile(atPath: applicationsURL.path) {
-            print("没有应用程序文件夹的写入权限，正在请求权限...")
+            logger.info("No write permission for Applications folder, requesting access...")
             try await requestApplicationsFolderAccess()
         }
         do {
@@ -399,13 +400,12 @@ class UpdateManager: ObservableObject {
             
             // 验证应用程序是否有效
             guard Bundle(url: destinationAppURL) != nil else {
-//                try fileManager.removeItem(at: destinationAppURL)
                 throw InstallationError.invalidAppBundle(AppLocalization.localized("The application bundle is invalid or damaged."))
             }
         } catch {
-            print("❌ 安装失败: \(error)")
+            logger.error("❌ Installation failed: \(error.localizedDescription)")
+            throw error
         }
-        
     }
 
     // MARK: - 显示安装完成提示
@@ -434,8 +434,8 @@ class UpdateManager: ObservableObject {
         
         let configuration = NSWorkspace.OpenConfiguration()
         NSWorkspace.shared.openApplication(at: newAppURL, configuration: configuration) { _, error in
-            if error != nil {
-                print("启动新应用失败，可能需要手动启动")
+            if let error = error {
+                logger.error("Failed to launch new application: \(error.localizedDescription)")
             }
             // 无论如何都退出当前应用（切回主线程）
             Task { @MainActor in

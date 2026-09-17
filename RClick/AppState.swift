@@ -55,6 +55,7 @@ class AppState: ObservableObject {
         apps.remove(at: index)
         do {
             try save()
+            NotificationCenter.default.post(name: .menuConfigShouldUpdate, object: nil)
         } catch {
             logger.info("save error: \(error.localizedDescription)")
         }
@@ -66,6 +67,7 @@ class AppState: ObservableObject {
 
         do {
             try save()
+            NotificationCenter.default.post(name: .menuConfigShouldUpdate, object: nil)
         } catch {
             logger.info("save error: \(error.localizedDescription)")
         }
@@ -85,6 +87,7 @@ class AppState: ObservableObject {
             updatedApp.environment = environment
             apps[index] = updatedApp
             try? save()
+            NotificationCenter.default.post(name: .menuConfigShouldUpdate, object: nil)
         }
     }
     
@@ -146,11 +149,82 @@ class AppState: ObservableObject {
     @MainActor func resetActionItems() {
         actions = RCAction.all
         try? save()
+        NotificationCenter.default.post(name: .menuConfigShouldUpdate, object: nil)
     }
 
     @MainActor func resetFiletypeItems() {
         newFiles = NewFile.all
         try? save()
+        NotificationCenter.default.post(name: .menuConfigShouldUpdate, object: nil)
+    }
+
+    @MainActor func moveCommonDirs(from source: IndexSet, to destination: Int) {
+        cdirs.move(fromOffsets: source, toOffset: destination)
+        persistMenuOrder()
+    }
+
+    @MainActor func resetCommonDirs() {
+        cdirs = Self.defaultCommonDirs()
+        try? save()
+        NotificationCenter.default.post(name: .menuConfigShouldUpdate, object: nil)
+    }
+
+    @MainActor func exportSettingsData() throws -> Data {
+        let archive = RightSightSettingsArchive(
+            apps: apps,
+            actions: actions,
+            newFiles: newFiles,
+            commonDirs: cdirs,
+            foldAppsMenu: foldAppsMenu,
+            foldActionsMenu: foldActionsMenu,
+            foldNewFileMenu: foldNewFileMenu,
+            foldCommonDirMenu: foldCommonDirMenu,
+            showCommonDirs: showCommonDirs,
+            showMenuBarExtra: UserDefaults.group.object(forKey: Key.showMenuBarExtra) as? Bool ?? true,
+            launchAtLogin: LaunchAtLogin.isEnabled
+        )
+        let encoder = PropertyListEncoder()
+        encoder.outputFormat = .xml
+        return try encoder.encode(archive)
+    }
+
+    @MainActor func importSettingsData(_ data: Data) throws {
+        let archive = try PropertyListDecoder().decode(RightSightSettingsArchive.self, from: data)
+        guard archive.version == RightSightSettingsArchive.currentVersion else {
+            throw SettingsArchiveError.unsupportedVersion
+        }
+
+        apps = archive.apps
+        actions = archive.actions
+        newFiles = archive.newFiles
+        cdirs = archive.commonDirs
+        foldAppsMenu = archive.foldAppsMenu
+        foldActionsMenu = archive.foldActionsMenu
+        foldNewFileMenu = archive.foldNewFileMenu
+        foldCommonDirMenu = archive.foldCommonDirMenu
+        showCommonDirs = archive.showCommonDirs
+        UserDefaults.group.set(archive.showMenuBarExtra, forKey: Key.showMenuBarExtra)
+        LaunchAtLogin.isEnabled = archive.launchAtLogin
+
+        try save()
+        NotificationCenter.default.post(name: .menuConfigShouldUpdate, object: nil)
+    }
+
+    @MainActor func resetAllSettings() throws {
+        apps = OpenWithApp.defaultApps
+        actions = RCAction.all
+        newFiles = NewFile.all
+        cdirs = Self.defaultCommonDirs()
+        foldAppsMenu = false
+        foldActionsMenu = false
+        foldNewFileMenu = true
+        foldCommonDirMenu = true
+        showCommonDirs = false
+        UserDefaults.group.set(true, forKey: Key.showMenuBarExtra)
+        LaunchAtLogin.isEnabled = false
+
+        try save()
+        NotificationCenter.default.post(name: .menuConfigShouldUpdate, object: nil)
     }
 
     @MainActor func refresh() {
@@ -159,6 +233,7 @@ class AppState: ObservableObject {
 
     @MainActor func sync() {
         try? save()
+        NotificationCenter.default.post(name: .menuConfigShouldUpdate, object: nil)
     }
 
     @MainActor
@@ -211,8 +286,8 @@ class AppState: ObservableObject {
 
         // 保存 CommonDirs
         try context.delete(model: CommonDirEntity.self)
-        for commonDir in cdirs {
-            context.insert(CommonDirEntity(from: commonDir))
+        for (index, commonDir) in cdirs.enumerated() {
+            context.insert(CommonDirEntity(from: commonDir, sortOrder: index))
         }
 
         try context.save()
@@ -263,13 +338,17 @@ class AppState: ObservableObject {
         // 加载 NewFiles
         let newFileDescriptor = FetchDescriptor<NewFileTypeEntity>(sortBy: [SortDescriptor(\.sortOrder)])
         newFiles = (try? context.fetch(newFileDescriptor))?.map { entity in
-            NewFile(
+            var newFile = NewFile(
                 ext: entity.fileExtension,
                 name: entity.name,
                 enabled: entity.isEnabled,
                 idx: entity.sortOrder,
-                icon: entity.icon
+                icon: entity.icon,
+                id: entity.id
             )
+            newFile.template = entity.templatePath.map { URL(fileURLWithPath: $0) }
+            newFile.openApp = entity.openAppPath.map { URL(fileURLWithPath: $0) }
+            return newFile
         } ?? []
 
         // 加载 CommonDirs
@@ -298,5 +377,63 @@ class AppState: ObservableObject {
         }
 
         logger.debug("Load from SwiftData: \(self.apps.count) apps, \(self.actions.count) actions, \(self.newFiles.count) newFiles, \(self.cdirs.count) commonDirs")
+    }
+
+    private static func defaultCommonDirs() -> [CommonDir] {
+        CommonDirEntity.createDefaultCommonDirs().map { entity in
+            CommonDir(id: entity.id, name: entity.name, url: entity.path, icon: entity.icon)
+        }
+    }
+}
+
+private struct RightSightSettingsArchive: Codable {
+    static let currentVersion = 1
+
+    let version: Int
+    let apps: [OpenWithApp]
+    let actions: [RCAction]
+    let newFiles: [NewFile]
+    let commonDirs: [CommonDir]
+    let foldAppsMenu: Bool
+    let foldActionsMenu: Bool
+    let foldNewFileMenu: Bool
+    let foldCommonDirMenu: Bool
+    let showCommonDirs: Bool
+    let showMenuBarExtra: Bool
+    let launchAtLogin: Bool
+
+    init(
+        apps: [OpenWithApp],
+        actions: [RCAction],
+        newFiles: [NewFile],
+        commonDirs: [CommonDir],
+        foldAppsMenu: Bool,
+        foldActionsMenu: Bool,
+        foldNewFileMenu: Bool,
+        foldCommonDirMenu: Bool,
+        showCommonDirs: Bool,
+        showMenuBarExtra: Bool,
+        launchAtLogin: Bool
+    ) {
+        version = Self.currentVersion
+        self.apps = apps
+        self.actions = actions
+        self.newFiles = newFiles
+        self.commonDirs = commonDirs
+        self.foldAppsMenu = foldAppsMenu
+        self.foldActionsMenu = foldActionsMenu
+        self.foldNewFileMenu = foldNewFileMenu
+        self.foldCommonDirMenu = foldCommonDirMenu
+        self.showCommonDirs = showCommonDirs
+        self.showMenuBarExtra = showMenuBarExtra
+        self.launchAtLogin = launchAtLogin
+    }
+}
+
+private enum SettingsArchiveError: LocalizedError {
+    case unsupportedVersion
+
+    var errorDescription: String? {
+        AppLocalization.localized("This settings backup was created by an unsupported version of RightSight.")
     }
 }

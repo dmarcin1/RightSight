@@ -22,50 +22,82 @@ struct CommonDirsSettingTabView: View {
     @State private var showCommonDirImporter = false
     
     var body: some View {
-        Form {
-            Section {
-                Toggle(isOn: $store.showCommonDirs) {
-                    Text(appLocalized: "Enable common folders")
-                }
+        SettingsPage(
+            title: "Common Dir",
+            subtitle: Tabs.cdirs.subtitle,
+            systemImage: Tabs.cdirs.icon
+        ) {
+            List {
+                Section {
+                    Toggle(isOn: $store.showCommonDirs) {
+                        Text(appLocalized: "Enable common folders")
+                    }
                     .onChange(of: store.showCommonDirs) {
                         NotificationCenter.default.post(name: .menuConfigShouldUpdate, object: nil)
                     }
-                Toggle(isOn: $store.foldCommonDirMenu) {
-                    Text(appLocalized: "Collapse menu")
-                }
+                    Toggle(isOn: $store.foldCommonDirMenu) {
+                        Text(appLocalized: "Collapse menu")
+                    }
                     .disabled(!store.showCommonDirs)
                     .onChange(of: store.foldCommonDirMenu) {
                         NotificationCenter.default.post(name: .menuConfigShouldUpdate, object: nil)
                     }
-            }
-
-            Section {
-                HStack {
-                    Spacer()
-                    Button {
-                        showCommonDirImporter = true
-                    } label: {
-                        Label(AppLocalization.localized("Add Folder"), systemImage: "folder.badge.plus")
-                    }
                 }
 
-                ForEach(store.cdirs) { item in
-                    LabeledContent {
+                Section {
+                    if store.cdirs.isEmpty {
+                        SettingsEmptyState(
+                            systemImage: "folder.badge.plus",
+                            title: "No folders added",
+                            message: "Add folders you visit often to reach them from Finder's context menu."
+                        )
+                    } else {
+                        ForEach(store.cdirs) { item in
+                            LabeledContent {
+                                Button {
+                                    removeCommonDir(item)
+                                } label: {
+                                    Image(systemName: "trash")
+                                }
+                                .buttonStyle(.borderless)
+                                .help(AppLocalization.localized("Remove folder"))
+                            } label: {
+                                HStack(spacing: 8) {
+                                    Image(systemName: "line.3.horizontal")
+                                        .foregroundColor(.secondary)
+                                    Label(item.displayName, systemImage: item.icon.isEmpty ? "folder" : item.icon)
+                                }
+                            }
+                        }
+                        .onMove { source, destination in
+                            store.moveCommonDirs(from: source, to: destination)
+                        }
+                    }
+                } header: {
+                    HStack {
+                        Text(appLocalized: "Added Folders")
+                        Spacer()
                         Button {
-                            removeCommonDir(item)
+                            showCommonDirImporter = true
                         } label: {
-                            Image(systemName: "trash")
+                            Label(AppLocalization.localized("Add Folder"), systemImage: "folder.badge.plus")
                         }
                         .buttonStyle(.borderless)
-                    } label: {
-                        Label(item.displayName, systemImage: item.icon.isEmpty ? "folder" : item.icon)
+                        .foregroundStyle(Color.accentColor)
                     }
+                } footer: {
+                    HStack {
+                        Spacer()
+                        Button(AppLocalization.localized("Restore Defaults")) {
+                            store.resetCommonDirs()
+                        }
+                    }
+                    .padding(.top, 4)
                 }
-            } header: {
-                Text(appLocalized: "Added Folders")
             }
+            .listStyle(.inset(alternatesRowBackgrounds: true))
+            .scrollContentBackground(.hidden)
         }
-        .formStyle(.grouped)
         .fileImporter(
             isPresented: $showCommonDirImporter,
             allowedContentTypes: [.directory],

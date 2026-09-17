@@ -13,17 +13,18 @@ public enum Constants {
     /// The identifier for the settings window.
     static let settingsWindowID = "rclick-settings"
     static let protectedDirs = [
-        HomedirPath + "/Desktop/",
-        HomedirPath + "/Desktop/danger/",
-        HomedirPath + "/Applications/",
-        "/Applications/",
-        "/System/",
-        "/Library/",
-        "/Users/",
-        "/usr/",
-        "/bin/",
-        "/sbin/",
-        "/var/"
+        HomedirPath,
+        HomedirPath + "/Desktop",
+        HomedirPath + "/Applications",
+        "/Applications",
+        "/System",
+        "/Library",
+        "/Users",
+        "/usr",
+        "/bin",
+        "/sbin",
+        "/var",
+        "/private"
     ]
     static let suitName = "group.com.rightsight.app"
 

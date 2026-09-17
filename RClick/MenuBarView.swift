@@ -6,15 +6,39 @@
 //
 
 import AppKit
+import FinderSync
 import SwiftUI
 
 struct MenuBarView: View {
     @Environment(\.openWindow) var openWindow: OpenWindowAction
+    @State private var isFinderExtensionEnabled = false
 
     let messager = Messager.shared
 
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
+            HStack(spacing: 8) {
+                Image("Logo")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("RightSight")
+                        .font(.headline)
+                    Text(String(format: AppLocalization.localized("Version %@"), appVersion))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .monospacedDigit()
+                }
+            }
+
+            Label(
+                AppLocalization.localized(isFinderExtensionEnabled ? "Finder Extension Enabled" : "Finder Extension Disabled"),
+                systemImage: isFinderExtensionEnabled ? "checkmark.circle.fill" : "exclamationmark.circle"
+            )
+            .foregroundStyle(isFinderExtensionEnabled ? .green : .secondary)
+
+            Divider()
+
             Button(action: actionSettings) {
                 Image(systemName: "gearshape")
                 Text(appLocalized: "Settings")
@@ -26,6 +50,9 @@ struct MenuBarView: View {
                 Text(appLocalized: "Quit")
             }
             .keyboardShortcut("q", modifiers: [.command])
+        }
+        .onAppear {
+            isFinderExtensionEnabled = FIFinderSyncController.isExtensionEnabled
         }
     }
 
@@ -46,11 +73,14 @@ struct MenuBarView: View {
     private func actionQuit() {
         messager.sendQuitNotification()
 
-        Task { @MainActor in
-            try await Task.sleep(nanoseconds: UInt64(1.0 * 1e9))
-
-            NSApplication.shared.terminate(self)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            NSApplication.shared.terminate(nil)
         }
+    }
+
+    private var appVersion: String {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+            ?? AppLocalization.localized("Unknown")
     }
 }
 
